@@ -19,25 +19,32 @@
               <div class="auth-max-width col-sm-8 col-md-6 col-xl-7 px-4">
                 <h2 class="mb-1 fs-7 fw-bolder">Welcome to SIPASTI</h2>
                 <p class="mb-7">Your Admin Dashboard</p>
-                <form>
+                <form action="{{ route('login') }}" method="POST">
+                  @csrf
                   <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    <label for="login" class="form-label">Username / Email</label>
+                    <input type="text" class="form-control @error('login') is-invalid @enderror" id="login" name="login" value="{{ old('login') }}" required autofocus>
+                    @error('login')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                   </div>
                   <div class="mb-4">
-                    <label for="exampleInputPassword1" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" required>
+                    @error('password')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                   </div>
                   <div class="d-flex align-items-center justify-content-between mb-4">
                     <div class="form-check">
-                      <input class="form-check-input primary" type="checkbox" value="" id="flexCheckChecked" checked>
-                      <label class="form-check-label text-dark fs-3" for="flexCheckChecked">
+                      <input class="form-check-input primary" type="checkbox" name="remember" id="remember">
+                      <label class="form-check-label text-dark fs-3" for="remember">
                         Remember this Device
                       </label>
                     </div>
                     <a class="text-primary fw-medium fs-3" href="#">Forgot Password ?</a>
                   </div>
-                  <a href="/" class="btn btn-primary w-100 py-8 mb-4 rounded-2">Sign In</a>
+                  <button type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2">Sign In</button>
                 </form>
               </div>
             </div>

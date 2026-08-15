@@ -64,5 +64,13 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password'),
             'level' => 6,
         ]);
+
+        \App\Models\User::factory()->create([
+            'name' => 'Super Admin',
+            'username' => 'superadmin',
+            'email' => 'superadmin@example.com',
+            'password' => bcrypt('password'),
+            'level' => 7,
+        ]);
     }
 }

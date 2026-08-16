@@ -68,15 +68,6 @@
           <input type="text" class="form-control" name="perihal" required placeholder="Perihal surat pengajuan...">
         </div>
 
-        <div class="col-md-12 mb-3">
-          <label class="form-label">Keterangan / Pesan Tambahan</label>
-          <textarea class="form-control" name="ket" rows="3" placeholder="Opsional..."></textarea>
-        </div>
-
-
-
-        <div class="col-md-6 mb-3"></div> <!-- spacer -->
-
         <div class="col-md-6 mb-4">
           <label class="form-label">Unggah Dokumen Utama (File 1) <span class="text-danger">*</span></label>
           <input class="form-control" type="file" name="file1" accept=".pdf" required>

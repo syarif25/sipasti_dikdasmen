@@ -17,12 +17,18 @@ class PengajuanController extends Controller
      */
     public function index()
     {
-        // Get pengajuan where latest log status is NOT Final/Selesai/Arsip
-        $pengajuans = Pengajuan::with(['lembaga', 'logs' => function($q) {
+        $query = Pengajuan::with(['lembaga', 'logs' => function($q) {
             $q->latest();
         }])->whereHas('logs', function($q) {
             $q->whereNotIn('status', ['FINAL', 'SELESAI', 'ARSIP']);
-        })->get();
+        });
+
+        // Filter for school level (Level 1)
+        if (auth()->user()->level == 1) {
+            $query->where('id_lembaga', auth()->user()->id_lembaga);
+        }
+
+        $pengajuans = $query->get();
 
         $jenisSurats = JenisSurat::all();
         $jabatans = Jabatan::all(); // for destination dropdown in action modal

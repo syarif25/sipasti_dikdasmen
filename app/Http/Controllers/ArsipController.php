@@ -13,10 +13,16 @@ class ArsipController extends Controller
      */
     public function index()
     {
-        // Get all pengajuan
-        $pengajuans = Pengajuan::with(['lembaga', 'logs' => function($q) {
+        $query = Pengajuan::with(['lembaga', 'logs' => function($q) {
             $q->latest();
-        }])->get();
+        }]);
+
+        // Filter for school level (Level 1)
+        if (auth()->user()->level == 1) {
+            $query->where('id_lembaga', auth()->user()->id_lembaga);
+        }
+
+        $pengajuans = $query->get();
 
         $jenisSurats = JenisSurat::all();
         

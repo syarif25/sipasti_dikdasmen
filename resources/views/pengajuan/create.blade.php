@@ -51,17 +51,7 @@
           </select>
         </div>
 
-        <div class="col-md-6 mb-3">
-          <label class="form-label">Tujuan Jabatan <span class="text-danger">*</span></label>
-          <select class="form-select" name="tujuan" required>
-            <option value="">-- Pilih Tujuan --</option>
-            <option value="Pengasuh">Pengasuh</option>
-            <option value="Ketua Yayasan">Ketua Yayasan</option>
-            <option value="BPK2M">BPK2M</option>
-            <option value="Bendahara">Bendahara</option>
-            <option value="Kabid DIKDASMEN">Kabid DIKDASMEN</option>
-          </select>
-        </div>
+        <input type="hidden" name="tujuan" value="Admin Dikdasmen">
 
         <div class="col-md-12 mb-3">
           <label class="form-label">Perihal <span class="text-danger">*</span></label>
@@ -69,15 +59,15 @@
         </div>
 
         <div class="col-md-6 mb-4">
-          <label class="form-label">Unggah Dokumen Utama (File 1) <span class="text-danger">*</span></label>
+          <label class="form-label">File 1 (Pengantar) <span class="text-danger">*</span></label>
           <input class="form-control" type="file" name="file1" accept=".pdf" required>
           <small class="text-muted">Maksimal 10 MB, wajib format PDF.</small>
         </div>
 
         <div class="col-md-6 mb-4">
-          <label class="form-label">Unggah Lampiran Tambahan (File 2)</label>
-          <input class="form-control" type="file" name="file2" accept=".pdf">
-          <small class="text-muted">Opsional. Maksimal 10 MB, format PDF.</small>
+          <label class="form-label">File 2 (Lampiran) <span class="text-danger">*</span></label>
+          <input class="form-control" type="file" name="file2" accept=".pdf" required>
+          <small class="text-muted">Maksimal 10 MB, wajib format PDF.</small>
         </div>
 
       </div>

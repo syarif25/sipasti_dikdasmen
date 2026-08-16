@@ -146,27 +146,60 @@
           <div class="modal fade" id="modalTeruskan{{ $item->id_pengajuan }}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
-                <form action="{{ route('pengajuan.teruskan', $item->id_pengajuan) }}" method="POST">
+                 <form action="{{ route('pengajuan.teruskan', $item->id_pengajuan) }}" method="POST" enctype="multipart/form-data">
                   @csrf
                   <div class="modal-header">
                     <h5 class="modal-title">Teruskan Pengajuan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
+                    @php
+                      $latestLog = $item->logs->first();
+                      $userLevel = auth()->user()->level;
+                      $isAccKabid = ($latestLog && $latestLog->status == 'ACC KABID');
+                    @endphp
+
                     <div class="mb-3">
                       <label class="form-label">Tujuan (Jabatan Berikutnya)</label>
                       <select class="form-select" name="tujuan_jabatan" required>
-                        <option value="">-- Pilih Tujuan --</option>
-                        @foreach($jabatans as $jab)
-                          <option value="{{ $jab->id_jabatan }}">{{ $jab->nama_jabatan }}</option>
-                        @endforeach
+                        @if($userLevel >= 7) {{-- Admin Dikdasmen --}}
+                          @if($isAccKabid)
+                            <option value="BPK2M">BPK2M</option>
+                            <option value="Bendahara">Bendahara</option>
+                            <option value="Sekretariat">Sekretariat</option>
+                          @else
+                            <option value="Kasubag">Kasubag</option>
+                            <option value="Kabag">Kabag</option>
+                            <option value="KATU">KATU</option>
+                          @endif
+                        @elseif($userLevel == 6) {{-- Kabid --}}
+                          <option value="Admin Dikdasmen">Admin Dikdasmen (Telah ACC Kabid)</option>
+                        @else {{-- Kasubag / Kabag / KATU --}}
+                          <option value="Kasubag">Kasubag</option>
+                          <option value="Kabag">Kabag</option>
+                          <option value="KATU">KATU</option>
+                          <option value="Kabid">Kabid</option>
+                        @endif
                       </select>
                     </div>
+
+                    @if($userLevel >= 7 && $isAccKabid)
+                      <div class="mb-3">
+                        <label class="form-label text-danger fw-bold">File 1 (Pengantar Baru) *</label>
+                        <input class="form-control" type="file" name="file1" accept=".pdf" required>
+                        <small class="text-muted">Wajib diunggah untuk menyatukan berkas sekolah + pengantar Dikdasmen.</small>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label fw-bold">File 2 (Lampiran Baru - Opsional)</label>
+                        <input class="form-control" type="file" name="file2" accept=".pdf">
+                        <small class="text-muted">Opsional. Biarkan kosong jika tidak ingin diubah.</small>
+                      </div>
+                    @endif
+
                     <div class="mb-3">
                       <label class="form-label">Catatan</label>
                       <textarea class="form-control" name="catatan" rows="3"></textarea>
                     </div>
-
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>

@@ -77,7 +77,11 @@ class PengajuanController extends Controller
         $pengajuan->nomor_surat = $request->nomor_surat;
         $pengajuan->jenis_surat = $request->jenis_surat;
         $pengajuan->perihal = $request->perihal;
-        $pengajuan->tujuan = collect(Jabatan::where('id_jabatan', $request->tujuan)->first())->get('nama_jabatan', $request->tujuan);
+        if (auth()->user()->level == 1) {
+            $pengajuan->tujuan = 'Admin Dikdasmen';
+        } else {
+            $pengajuan->tujuan = collect(Jabatan::where('id_jabatan', $request->tujuan)->first())->get('nama_jabatan', $request->tujuan);
+        }
         $pengajuan->ket = $request->ket;
         $pengajuan->tgl_upload = now();
         $pengajuan->id_tahun = $idTahun;
@@ -133,16 +137,47 @@ class PengajuanController extends Controller
 
     public function teruskan(Request $request, $id)
     {
-        $request->validate([
+        $pengajuan = Pengajuan::findOrFail($id);
+        $latestLog = $pengajuan->logs()->latest()->first();
+
+        // Check if Admin (Level 7 or 8) is forwarding a document that has been ACC by Kabid
+        $isAdminAndAccKabid = (auth()->user()->level >= 7 && $latestLog && $latestLog->status == 'ACC KABID');
+
+        $rules = [
             'tujuan_jabatan' => 'required|string',
             'catatan' => 'nullable|string',
-            'is_final' => 'nullable|boolean'
-        ]);
+        ];
+
+        if ($isAdminAndAccKabid) {
+            $rules['file1'] = 'required|mimes:pdf|max:10240';
+            $rules['file2'] = 'nullable|mimes:pdf|max:10240';
+        }
+
+        $request->validate($rules);
 
         $jabatanTujuan = Jabatan::where('id_jabatan', $request->tujuan_jabatan)->first();
         $namaTujuan = $jabatanTujuan ? $jabatanTujuan->nama_jabatan : $request->tujuan_jabatan;
 
-        $status = $request->is_final ? 'SELESAI' : 'DALAM PROSES';
+        // Set status
+        $status = 'DALAM PROSES';
+        if (auth()->user()->level == 6) {
+            $status = 'ACC KABID';
+        } elseif ($isAdminAndAccKabid) {
+            $status = 'SELESAI';
+        }
+
+        // Handle file uploads
+        $file1Path = $latestLog ? $latestLog->file1 : null;
+        $file2Path = $latestLog ? $latestLog->file2 : null;
+
+        if ($isAdminAndAccKabid) {
+            if ($request->hasFile('file1')) {
+                $file1Path = $request->file('file1')->store('pengajuan', 'public');
+            }
+            if ($request->hasFile('file2')) {
+                $file2Path = $request->file('file2')->store('pengajuan', 'public');
+            }
+        }
 
         Log::create([
             'id_pengajuan' => $id,
@@ -151,6 +186,8 @@ class PengajuanController extends Controller
             'catatan' => $request->catatan,
             'tanggal_posisi' => now(),
             'status' => $status,
+            'file1' => $file1Path,
+            'file2' => $file2Path,
         ]);
 
         return redirect()->back()->with('success', 'Dokumen berhasil diteruskan.');

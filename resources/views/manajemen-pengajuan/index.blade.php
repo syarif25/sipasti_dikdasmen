@@ -27,7 +27,7 @@
     <h5 class="card-title fw-semibold mb-4">Daftar Pengajuan (Administrator)</h5>
 
     <div class="table-responsive">
-      <table id="dataTable" class="table align-middle border text-nowrap table-striped table-bordered text-nowrap">
+      <table id="dataTable" class="table align-middle border table-striped table-bordered">
         <thead class="text-dark fs-3">
           <tr>
             <th>No.</th>

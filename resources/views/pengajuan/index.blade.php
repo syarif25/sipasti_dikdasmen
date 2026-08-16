@@ -53,7 +53,7 @@
     </div>
 
     <div class="table-responsive">
-      <table id="dataTable" class="table align-middle border text-nowrap table-striped table-bordered text-nowrap">
+      <table id="dataTable" class="table align-middle border table-striped table-bordered">
         <thead class="text-dark fs-3">
           <tr>
             <th><h6 class="fw-semibold mb-0 text-uppercase fs-2">No.</h6></th>

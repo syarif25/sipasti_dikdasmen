@@ -54,8 +54,8 @@
                   @endphp
                   <li class="nav-item">
                     <div class="nav-link pe-0 d-flex align-items-center">
-                      <div class="user-profile-img">
-                        <img src="{{ asset('assets/images/profile/user-1.jpg') }}" class="rounded-circle" width="35" height="35" alt="modernize-img" />
+                      <div class="user-profile-img d-flex align-items-center">
+                        <i class="ti ti-user-circle text-primary fs-8 bg-primary-subtle rounded-circle p-1" style="line-height: 1;"></i>
                       </div>
                       <div class="ms-3 d-none d-sm-block text-start">
                         <h6 class="mb-0 fs-3 fw-semibold text-dark">{{ Auth::user()->username }}</h6>

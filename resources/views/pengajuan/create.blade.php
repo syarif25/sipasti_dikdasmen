@@ -73,15 +73,7 @@
           <textarea class="form-control" name="ket" rows="3" placeholder="Opsional..."></textarea>
         </div>
 
-        <div class="col-md-6 mb-3">
-          <label class="form-label">Tahun Akademik <span class="text-danger">*</span></label>
-          <select class="form-select" name="id_tahun" required>
-            <option value="">-- Pilih Tahun Akademik --</option>
-            @foreach($tahunAkademiks as $ta)
-              <option value="{{ $ta->id_tahun }}">{{ $ta->tahun_akademik }}</option>
-            @endforeach
-          </select>
-        </div>
+
 
         <div class="col-md-6 mb-3"></div> <!-- spacer -->
 

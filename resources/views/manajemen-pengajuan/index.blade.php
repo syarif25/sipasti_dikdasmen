@@ -114,13 +114,6 @@
                         @endforeach
                       </select>
                     </div>
-                    <div class="mb-3">
-                      <label class="form-label">Tahun Akademik</label>
-                      <select class="form-select" name="id_tahun" required>
-                        @foreach($tahunAkademiks as $ta)
-                          <option value="{{ $ta->id_tahun }}" {{ $item->id_tahun == $ta->id_tahun ? 'selected' : '' }}>{{ $ta->tahun_akademik }}</option>
-                        @endforeach
-                      </select>
                     </div>
                   </div>
                   <div class="modal-footer">

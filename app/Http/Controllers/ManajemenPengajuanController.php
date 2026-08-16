@@ -41,7 +41,6 @@ class ManajemenPengajuanController extends Controller
             'tujuan' => 'required|string|max:255',
             'jenis_surat' => 'required|string|max:255',
             'id_lembaga' => 'required|string|max:10',
-            'id_tahun' => 'required|integer',
         ]);
 
         $pengajuan = Pengajuan::findOrFail($id);
@@ -51,7 +50,6 @@ class ManajemenPengajuanController extends Controller
             'tujuan' => $request->tujuan,
             'jenis_surat' => $request->jenis_surat,
             'id_lembaga' => $request->id_lembaga,
-            'id_tahun' => $request->id_tahun,
         ]);
 
         return redirect()->back()->with('success', 'Data pengajuan berhasil diperbarui!');

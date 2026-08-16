@@ -57,10 +57,12 @@ class PengajuanController extends Controller
             'jenis_surat' => 'required|string',
             'perihal' => 'required|string',
             'tujuan' => 'required|string',
-            'id_tahun' => 'required|integer',
             'file1' => 'required|mimes:pdf|max:10240', // 10MB max
             'file2' => 'nullable|mimes:pdf|max:10240',
         ]);
+
+        $activeYear = TahunAkademik::where('status', 'Aktif')->first();
+        $idTahun = $activeYear ? $activeYear->id_tahun : 2025; // fallback
 
         $idPengajuan = 'PGJ' . time();
 
@@ -72,7 +74,7 @@ class PengajuanController extends Controller
         $pengajuan->tujuan = collect(Jabatan::where('id_jabatan', $request->tujuan)->first())->get('nama_jabatan', $request->tujuan);
         $pengajuan->ket = $request->ket;
         $pengajuan->tgl_upload = now();
-        $pengajuan->id_tahun = $request->id_tahun;
+        $pengajuan->id_tahun = $idTahun;
         $pengajuan->pencairan = '-';
         $pengajuan->lpj = 0;
         $pengajuan->id_lembaga = auth()->user()->id_lembaga;

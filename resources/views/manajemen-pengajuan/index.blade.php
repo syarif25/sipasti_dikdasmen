@@ -90,7 +90,13 @@
                     </div>
                     <div class="mb-3">
                       <label class="form-label">Tujuan</label>
-                      <input type="text" class="form-control" name="tujuan" value="{{ $item->tujuan }}" required>
+                      <select class="form-select" name="tujuan" required>
+                        <option value="Pengasuh" {{ $item->tujuan == 'Pengasuh' ? 'selected' : '' }}>Pengasuh</option>
+                        <option value="Ketua Yayasan" {{ $item->tujuan == 'Ketua Yayasan' ? 'selected' : '' }}>Ketua Yayasan</option>
+                        <option value="BPK2M" {{ $item->tujuan == 'BPK2M' ? 'selected' : '' }}>BPK2M</option>
+                        <option value="Bendahara" {{ $item->tujuan == 'Bendahara' ? 'selected' : '' }}>Bendahara</option>
+                        <option value="Kabid DIKDASMEN" {{ $item->tujuan == 'Kabid DIKDASMEN' ? 'selected' : '' }}>Kabid DIKDASMEN</option>
+                      </select>
                     </div>
                     <div class="mb-3">
                       <label class="form-label">Jenis Surat</label>

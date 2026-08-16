@@ -55,9 +55,11 @@
           <label class="form-label">Tujuan Jabatan <span class="text-danger">*</span></label>
           <select class="form-select" name="tujuan" required>
             <option value="">-- Pilih Tujuan --</option>
-            @foreach($jabatans as $jabatan)
-              <option value="{{ $jabatan->id_jabatan }}">{{ $jabatan->nama_jabatan }}</option>
-            @endforeach
+            <option value="Pengasuh">Pengasuh</option>
+            <option value="Ketua Yayasan">Ketua Yayasan</option>
+            <option value="BPK2M">BPK2M</option>
+            <option value="Bendahara">Bendahara</option>
+            <option value="Kabid DIKDASMEN">Kabid DIKDASMEN</option>
           </select>
         </div>
 

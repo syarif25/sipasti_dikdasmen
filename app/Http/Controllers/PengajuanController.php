@@ -77,11 +77,7 @@ class PengajuanController extends Controller
         $pengajuan->nomor_surat = $request->nomor_surat;
         $pengajuan->jenis_surat = $request->jenis_surat;
         $pengajuan->perihal = $request->perihal;
-        if (auth()->user()->level == 1) {
-            $pengajuan->tujuan = 'Admin Dikdasmen';
-        } else {
-            $pengajuan->tujuan = collect(Jabatan::where('id_jabatan', $request->tujuan)->first())->get('nama_jabatan', $request->tujuan);
-        }
+        $pengajuan->tujuan = collect(Jabatan::where('id_jabatan', $request->tujuan)->first())->get('nama_jabatan', $request->tujuan);
         $pengajuan->ket = $request->ket;
         $pengajuan->tgl_upload = now();
         $pengajuan->id_tahun = $idTahun;

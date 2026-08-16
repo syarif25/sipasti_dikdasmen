@@ -166,10 +166,7 @@
                       <label class="form-label">Catatan</label>
                       <textarea class="form-control" name="catatan" rows="3"></textarea>
                     </div>
-                    <div class="mb-3 form-check">
-                      <input type="checkbox" class="form-check-input" id="isFinal{{ $item->id_pengajuan }}" name="is_final" value="1">
-                      <label class="form-check-label fw-bold text-success" for="isFinal{{ $item->id_pengajuan }}">Tandai sebagai FINAL / SELESAI (Masuk Arsip)</label>
-                    </div>
+
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>

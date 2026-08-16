@@ -55,7 +55,8 @@
                 4 => 'Kabag',
                 5 => 'KTU',
                 6 => 'Kabid',
-                7 => 'Super Admin'
+                7 => 'Administrator',
+                8 => 'Super Admin'
             ];
           @endphp
           @foreach($penggunas as $item)

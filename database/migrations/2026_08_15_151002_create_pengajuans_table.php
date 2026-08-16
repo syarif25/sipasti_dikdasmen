@@ -12,12 +12,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pengajuans', function (Blueprint $table) {
-            $table->id();
+            $table->string('id_pengajuan', 15)->primary();
+            $table->string('nomor_surat', 100);
             $table->string('perihal');
+            $table->string('tujuan', 20);
             $table->string('jenis_surat');
             $table->text('ket')->nullable();
-            $table->unsignedBigInteger('id_lembaga');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->dateTime('tgl_upload');
+            $table->integer('id_tahun');
+            $table->string('pencairan', 5);
+            $table->integer('lpj');
+            $table->string('id_lembaga', 10);
+            $table->integer('user_id'); // Match the id_user type (integer) in users table
+            
+            $table->foreign('user_id')->references('id_user')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

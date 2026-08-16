@@ -22,7 +22,8 @@ class DatabaseSeeder extends Seeder
             'username' => 'sekolah',
             'email' => 'sekolah@example.com',
             'password' => bcrypt('password'),
-            'level' => 1,
+            'level' => '1',
+            'status' => 1,
         ]);
 
         \App\Models\User::factory()->create([
@@ -30,7 +31,8 @@ class DatabaseSeeder extends Seeder
             'username' => 'staf',
             'email' => 'staf@example.com',
             'password' => bcrypt('password'),
-            'level' => 2,
+            'level' => '2',
+            'status' => 1,
         ]);
 
         \App\Models\User::factory()->create([
@@ -38,7 +40,8 @@ class DatabaseSeeder extends Seeder
             'username' => 'kasubag',
             'email' => 'kasubag@example.com',
             'password' => bcrypt('password'),
-            'level' => 3,
+            'level' => '3',
+            'status' => 1,
         ]);
 
         \App\Models\User::factory()->create([
@@ -46,7 +49,8 @@ class DatabaseSeeder extends Seeder
             'username' => 'kabag',
             'email' => 'kabag@example.com',
             'password' => bcrypt('password'),
-            'level' => 4,
+            'level' => '4',
+            'status' => 1,
         ]);
 
         \App\Models\User::factory()->create([
@@ -54,7 +58,8 @@ class DatabaseSeeder extends Seeder
             'username' => 'ktu',
             'email' => 'ktu@example.com',
             'password' => bcrypt('password'),
-            'level' => 5,
+            'level' => '5',
+            'status' => 1,
         ]);
 
         \App\Models\User::factory()->create([
@@ -62,7 +67,8 @@ class DatabaseSeeder extends Seeder
             'username' => 'kabid',
             'email' => 'kabid@example.com',
             'password' => bcrypt('password'),
-            'level' => 6,
+            'level' => '6',
+            'status' => 1,
         ]);
 
         \App\Models\User::factory()->create([
@@ -70,7 +76,8 @@ class DatabaseSeeder extends Seeder
             'username' => 'superadmin',
             'email' => 'superadmin@example.com',
             'password' => bcrypt('password'),
-            'level' => 7,
+            'level' => '7',
+            'status' => 1,
         ]);
     }
 }

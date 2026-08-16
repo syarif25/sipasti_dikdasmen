@@ -17,6 +17,8 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    protected $primaryKey = 'id_user';
+
     protected $fillable = [
         'name',
         'username',
@@ -26,6 +28,7 @@ class User extends Authenticatable
         'id_lembaga',
         'id_jabatan',
         'level',
+        'status',
     ];
 
     /**

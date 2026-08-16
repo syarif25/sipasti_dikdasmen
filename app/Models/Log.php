@@ -19,4 +19,10 @@ class Log extends Model
         'file2',
         'file_revisi',
         'status',
-    ];}
+    ];
+
+    public function pengajuan()
+    {
+        return $this->belongsTo(Pengajuan::class, 'id_pengajuan', 'id_pengajuan');
+    }
+}

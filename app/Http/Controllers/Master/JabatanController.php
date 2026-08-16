@@ -19,11 +19,15 @@ class JabatanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_jabatan' => 'required|integer|unique:jabatans',
             'nama_jabatan' => 'required|string|max:50',
         ]);
 
-        \App\Models\Jabatan::create($request->all());
+        $maxId = \App\Models\Jabatan::max('id_jabatan') ?? 0;
+
+        \App\Models\Jabatan::create([
+            'id_jabatan' => $maxId + 1,
+            'nama_jabatan' => $request->nama_jabatan,
+        ]);
 
         return redirect()->route('master.jabatan.index')->with('success', 'Data Jabatan berhasil ditambahkan.');
     }

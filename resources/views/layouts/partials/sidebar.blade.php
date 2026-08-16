@@ -82,15 +82,15 @@
           </a>
         </li>
         <li class="sidebar-item">
-          <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
+          <a class="sidebar-link has-arrow {{ request()->is('master-data*') ? 'active' : '' }}" href="#masterDataCollapse" data-bs-toggle="collapse" aria-expanded="{{ request()->is('master-data*') ? 'true' : 'false' }}">
             <span class="d-flex">
               <i class="ti ti-box-multiple"></i>
             </span>
             <span class="hide-menu">Master Data</span>
           </a>
-          <ul aria-expanded="false" class="collapse first-level">
+          <ul id="masterDataCollapse" class="collapse first-level {{ request()->is('master-data*') ? 'show' : '' }}">
             <li class="sidebar-item">
-              <a href="{{ route('master.lembaga.index') }}" class="sidebar-link">
+              <a href="{{ route('master.lembaga.index') }}" class="sidebar-link {{ request()->routeIs('master.lembaga.*') ? 'active' : '' }}">
                 <div class="round-16 d-flex align-items-center justify-content-center">
                   <i class="ti ti-circle"></i>
                 </div>
@@ -98,7 +98,7 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a href="{{ route('master.jabatan.index') }}" class="sidebar-link">
+              <a href="{{ route('master.jabatan.index') }}" class="sidebar-link {{ request()->routeIs('master.jabatan.*') ? 'active' : '' }}">
                 <div class="round-16 d-flex align-items-center justify-content-center">
                   <i class="ti ti-circle"></i>
                 </div>
@@ -106,7 +106,7 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a href="{{ route('master.jenis-surat.index') }}" class="sidebar-link">
+              <a href="{{ route('master.jenis-surat.index') }}" class="sidebar-link {{ request()->routeIs('master.jenis-surat.*') ? 'active' : '' }}">
                 <div class="round-16 d-flex align-items-center justify-content-center">
                   <i class="ti ti-circle"></i>
                 </div>
@@ -114,7 +114,7 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a href="{{ route('master.tahun-akademik.index') }}" class="sidebar-link">
+              <a href="{{ route('master.tahun-akademik.index') }}" class="sidebar-link {{ request()->routeIs('master.tahun-akademik.*') ? 'active' : '' }}">
                 <div class="round-16 d-flex align-items-center justify-content-center">
                   <i class="ti ti-circle"></i>
                 </div>
@@ -124,30 +124,29 @@
           </ul>
         </li>
         @endif
+        
+        <!-- ============================================== -->
+        <!-- AKUN                                           -->
+        <!-- ============================================== -->
+        <li class="nav-small-cap">
+          <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+          <span class="hide-menu">Akun</span>
+        </li>
+        <li class="sidebar-item mb-5">
+          <form method="POST" action="{{ route('logout') }}" id="logout-form" class="d-none">
+             @csrf
+          </form>
+          <a class="sidebar-link text-danger" href="javascript:void(0)" onclick="document.getElementById('logout-form').submit();" aria-expanded="false">
+            <span>
+              <i class="ti ti-power"></i>
+            </span>
+            <span class="hide-menu">Log Out</span>
+          </a>
+        </li>
       </ul>
     </nav>
 
-    <!-- User Profile Card -->
-    <div class="fixed-profile p-3 mx-4 mb-2 bg-secondary-subtle rounded mt-3">
-      <div class="hstack gap-3">
-        <div class="john-img">
-          <img src="{{ asset('assets/images/profile/user-1.jpg') }}" class="rounded-circle" width="40" height="40" alt="profile" />
-        </div>
-        <div class="john-title">
-          <h6 class="mb-0 fs-4 fw-semibold">{{ Auth::user()->username }}</h6>
-          <span class="fs-2">Level {{ Auth::user()->level }}</span>
-        </div>
-        
-        <!-- Logout Form -->
-        <form method="POST" action="{{ route('logout') }}" class="ms-auto">
-          @csrf
-          <button type="submit" class="border-0 bg-transparent text-primary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Logout">
-            <i class="ti ti-power fs-6"></i>
-          </button>
-        </form>
-
-      </div>
-    </div>
+    <!-- End Vertical Layout Sidebar -->
     <!-- End Vertical Layout Sidebar -->
   </div>
 </aside>

@@ -23,4 +23,25 @@ class Pengajuan extends Model
         'lpj',
         'id_lembaga',
         'user_id',
-    ];}
+    ];
+
+    public function lembaga()
+    {
+        return $this->belongsTo(Lembaga::class, 'id_lembaga', 'id_lembaga');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id_user');
+    }
+
+    public function logs()
+    {
+        return $this->hasMany(Log::class, 'id_pengajuan', 'id_pengajuan')->orderBy('created_at', 'asc');
+    }
+
+    public function tahunAkademik()
+    {
+        return $this->belongsTo(TahunAkademik::class, 'id_tahun', 'id_tahun');
+    }
+}

@@ -21,6 +21,13 @@
 
   <title>SIPASTI Dikdasmen</title>
 
+  <!-- Prevent FOUC for Dark Mode -->
+  <script>
+    const savedTheme = localStorage.getItem('sipasti_theme');
+    if (savedTheme) {
+        document.documentElement.setAttribute('data-bs-theme', savedTheme);
+    }
+  </script>
 </head>
 
 <body class="link-sidebar">
@@ -87,5 +94,46 @@
   </script>
 
   @stack('scripts')
+
+  <!-- Save Theme to localStorage on Click and Force Display -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 1. Force the correct display on load
+      const savedTheme = localStorage.getItem('sipasti_theme') || 'light';
+      if (savedTheme === 'dark') {
+        document.querySelectorAll('.dark-logo').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.light-logo').forEach(el => el.style.display = 'flex');
+        document.querySelectorAll('.moon').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.sun').forEach(el => el.style.display = 'flex');
+      } else {
+        document.querySelectorAll('.light-logo').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.dark-logo').forEach(el => el.style.display = 'flex');
+        document.querySelectorAll('.sun').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.moon').forEach(el => el.style.display = 'flex');
+      }
+
+      // 2. Save on click and apply instantly
+      document.querySelectorAll('.dark-layout').forEach(el => {
+        el.addEventListener('click', () => {
+          localStorage.setItem('sipasti_theme', 'dark');
+          document.documentElement.setAttribute('data-bs-theme', 'dark');
+          document.querySelectorAll('.dark-logo').forEach(e => e.style.display = 'none');
+          document.querySelectorAll('.light-logo').forEach(e => e.style.display = 'flex');
+          document.querySelectorAll('.moon').forEach(e => e.style.display = 'none');
+          document.querySelectorAll('.sun').forEach(e => e.style.display = 'flex');
+        });
+      });
+      document.querySelectorAll('.light-layout').forEach(el => {
+        el.addEventListener('click', () => {
+          localStorage.setItem('sipasti_theme', 'light');
+          document.documentElement.setAttribute('data-bs-theme', 'light');
+          document.querySelectorAll('.light-logo').forEach(e => e.style.display = 'none');
+          document.querySelectorAll('.dark-logo').forEach(e => e.style.display = 'flex');
+          document.querySelectorAll('.sun').forEach(e => e.style.display = 'none');
+          document.querySelectorAll('.moon').forEach(e => e.style.display = 'flex');
+        });
+      });
+    });
+  </script>
 </body>
 </html>

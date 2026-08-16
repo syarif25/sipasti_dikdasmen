@@ -35,11 +35,9 @@
     <div class="table-responsive">
       <table id="dataTable" class="table border table-striped table-bordered text-nowrap">
         <thead>
-          <tr>
+            <tr>
             <th>No</th>
-            <th>ID Tahun</th>
             <th>Tahun Akademik</th>
-            <th>Semester</th>
             <th>Status</th>
             <th>Aksi</th>
           </tr>
@@ -48,15 +46,22 @@
           @foreach($tahun_akademiks as $item)
           <tr>
             <td>{{ $loop->iteration }}</td>
-            <td>{{ $item->id_tahun }}</td>
             <td>{{ $item->tahun_akademik }}</td>
-            <td>{{ $item->semester }}</td>
             <td>
               <span class="badge bg-{{ $item->status == 'Aktif' ? 'success' : 'danger' }} rounded-3 fw-semibold">
                 {{ $item->status }}
               </span>
             </td>
             <td>
+              @if($item->status != 'Aktif')
+              <form action="{{ route('master.tahun-akademik.activate', $item->id_tahun) }}" method="POST" class="d-inline form-activate">
+                @csrf
+                @method('PATCH')
+                <button type="button" class="btn btn-sm btn-success btn-activate">
+                  <i class="ti ti-check"></i> Aktifkan
+                </button>
+              </form>
+              @endif
               <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEdit{{ $item->id_tahun }}">
                 <i class="ti ti-edit"></i> Edit
               </button>
@@ -83,19 +88,8 @@
                   </div>
                   <div class="modal-body">
                     <div class="mb-3">
-                      <label class="form-label">ID Tahun</label>
-                      <input type="text" class="form-control" value="{{ $item->id_tahun }}" readonly>
-                    </div>
-                    <div class="mb-3">
                       <label class="form-label">Tahun Akademik</label>
                       <input type="text" class="form-control" name="tahun_akademik" value="{{ $item->tahun_akademik }}" required maxlength="20">
-                    </div>
-                    <div class="mb-3">
-                      <label class="form-label">Semester</label>
-                      <select name="semester" class="form-select" required>
-                        <option value="Ganjil" {{ $item->semester == 'Ganjil' ? 'selected' : '' }}>Ganjil</option>
-                        <option value="Genap" {{ $item->semester == 'Genap' ? 'selected' : '' }}>Genap</option>
-                      </select>
                     </div>
                     <div class="mb-3">
                       <label class="form-label">Status</label>
@@ -132,21 +126,9 @@
         </div>
         <div class="modal-body">
           <div class="mb-3">
-            <label class="form-label">ID Tahun</label>
-            <input type="number" class="form-control" name="id_tahun" required>
-            <small class="text-muted">Contoh: 2025</small>
-          </div>
-          <div class="mb-3">
             <label class="form-label">Tahun Akademik</label>
             <input type="text" class="form-control" name="tahun_akademik" required maxlength="20">
             <small class="text-muted">Contoh: 2025/2026</small>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Semester</label>
-            <select name="semester" class="form-select" required>
-              <option value="Ganjil">Ganjil</option>
-              <option value="Genap">Genap</option>
-            </select>
           </div>
           <div class="mb-3">
             <label class="form-label">Status</label>
@@ -189,6 +171,25 @@
         confirmButtonColor: '#d33',
         cancelButtonColor: '#3085d6',
         confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          form.submit();
+        }
+      })
+    });
+
+    $('.btn-activate').on('click', function(e) {
+      e.preventDefault();
+      let form = $(this).closest('form');
+      Swal.fire({
+        title: 'Aktifkan Tahun Akademik?',
+        text: "Tahun akademik lainnya akan otomatis dinonaktifkan.",
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, Aktifkan!',
         cancelButtonText: 'Batal'
       }).then((result) => {
         if (result.isConfirmed) {

@@ -19,13 +19,17 @@ class TahunAkademikController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_tahun' => 'required|integer|unique:tahun_akademiks',
             'tahun_akademik' => 'required|string|max:20',
-            'semester' => 'required|string|max:20',
             'status' => 'required|string|max:20',
         ]);
 
-        \App\Models\TahunAkademik::create($request->all());
+        $maxId = \App\Models\TahunAkademik::max('id_tahun') ?? 2024;
+        
+        $data = $request->all();
+        $data['id_tahun'] = $maxId + 1;
+        $data['semester'] = '-';
+
+        \App\Models\TahunAkademik::create($data);
 
         return redirect()->route('master.tahun-akademik.index')->with('success', 'Data Tahun Akademik berhasil ditambahkan.');
     }
@@ -34,14 +38,29 @@ class TahunAkademikController extends Controller
     {
         $request->validate([
             'tahun_akademik' => 'required|string|max:20',
-            'semester' => 'required|string|max:20',
             'status' => 'required|string|max:20',
         ]);
 
         $tahunAkademik = \App\Models\TahunAkademik::findOrFail($id);
-        $tahunAkademik->update($request->only(['tahun_akademik', 'semester', 'status']));
+        
+        $data = $request->only(['tahun_akademik', 'status']);
+        $data['semester'] = '-';
+        
+        $tahunAkademik->update($data);
 
         return redirect()->route('master.tahun-akademik.index')->with('success', 'Data Tahun Akademik berhasil diperbarui.');
+    }
+
+    public function activate(string $id)
+    {
+        // Set all to Tidak Aktif
+        \App\Models\TahunAkademik::where('status', 'Aktif')->update(['status' => 'Tidak Aktif']);
+        
+        // Set selected to Aktif
+        $tahunAkademik = \App\Models\TahunAkademik::findOrFail($id);
+        $tahunAkademik->update(['status' => 'Aktif']);
+
+        return redirect()->route('master.tahun-akademik.index')->with('success', 'Tahun Akademik ' . $tahunAkademik->tahun_akademik . ' berhasil diaktifkan.');
     }
 
     public function destroy(string $id)

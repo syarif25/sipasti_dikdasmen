@@ -43,4 +43,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function lembaga()
+    {
+        return $this->belongsTo(Lembaga::class, 'id_lembaga', 'id_lembaga');
+    }
+
+    public function jabatan()
+    {
+        return $this->belongsTo(Jabatan::class, 'id_jabatan', 'id_jabatan');
+    }
 }

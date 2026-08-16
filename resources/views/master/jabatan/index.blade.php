@@ -37,7 +37,6 @@
         <thead>
           <tr>
             <th>No</th>
-            <th>ID Jabatan</th>
             <th>Nama Jabatan</th>
             <th>Aksi</th>
           </tr>
@@ -46,7 +45,6 @@
           @foreach($jabatans as $item)
           <tr>
             <td>{{ $loop->iteration }}</td>
-            <td>{{ $item->id_jabatan }}</td>
             <td>{{ $item->nama_jabatan }}</td>
             <td>
               <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEdit{{ $item->id_jabatan }}">
@@ -74,10 +72,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <div class="mb-3">
-                      <label class="form-label">ID Jabatan</label>
-                      <input type="text" class="form-control" value="{{ $item->id_jabatan }}" readonly>
-                    </div>
                     <div class="mb-3">
                       <label class="form-label">Nama Jabatan</label>
                       <input type="text" class="form-control" name="nama_jabatan" value="{{ $item->nama_jabatan }}" required maxlength="50">
@@ -109,10 +103,6 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <div class="mb-3">
-            <label class="form-label">ID Jabatan</label>
-            <input type="number" class="form-control" name="id_jabatan" required>
-          </div>
           <div class="mb-3">
             <label class="form-label">Nama Jabatan</label>
             <input type="text" class="form-control" name="nama_jabatan" required maxlength="50">

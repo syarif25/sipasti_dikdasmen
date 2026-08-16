@@ -1,0 +1,107 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="card bg-info-subtle shadow-none position-relative overflow-hidden mb-4">
+  <div class="card-body px-4 py-3">
+    <div class="row align-items-center">
+      <div class="col-9">
+        <h4 class="fw-semibold mb-8">Tambah Pengajuan Baru</h4>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a class="text-muted text-decoration-none" href="/">Dashboard</a></li>
+            <li class="breadcrumb-item"><a class="text-muted text-decoration-none" href="{{ route('pengajuan.index') }}">Pengajuan</a></li>
+            <li class="breadcrumb-item" aria-current="page">Tambah</li>
+          </ol>
+        </nav>
+      </div>
+      <div class="col-3">
+        <div class="text-center mb-n5">
+          <i class="ti ti-file-plus fs-8 text-info"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <h5 class="mb-4 fw-semibold">Form Pengajuan Dokumen</h5>
+    <form action="{{ route('pengajuan.store') }}" method="POST" enctype="multipart/form-data">
+      @csrf
+      <div class="row">
+        <!-- Pengirim (Readonly) -->
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Lembaga Pengirim</label>
+          <input type="text" class="form-control" value="{{ Auth::user()->lembaga->nama_lembaga ?? 'Tidak Terkait Lembaga' }}" disabled readonly>
+          <small class="text-muted">Data ditarik otomatis dari profil Anda.</small>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Nomor Surat <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" name="nomor_surat" required placeholder="Contoh: 001/MTS/VIII/2024">
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Jenis Surat <span class="text-danger">*</span></label>
+          <select class="form-select" name="jenis_surat" required>
+            <option value="">-- Pilih Jenis Surat --</option>
+            @foreach($jenisSurats as $js)
+              <option value="{{ $js->jenis_surat }}">{{ $js->jenis_surat }}</option>
+            @endforeach
+          </select>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Tujuan Jabatan <span class="text-danger">*</span></label>
+          <select class="form-select" name="tujuan" required>
+            <option value="">-- Pilih Tujuan --</option>
+            @foreach($jabatans as $jabatan)
+              <option value="{{ $jabatan->id_jabatan }}">{{ $jabatan->nama_jabatan }}</option>
+            @endforeach
+          </select>
+        </div>
+
+        <div class="col-md-12 mb-3">
+          <label class="form-label">Perihal <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" name="perihal" required placeholder="Perihal surat pengajuan...">
+        </div>
+
+        <div class="col-md-12 mb-3">
+          <label class="form-label">Keterangan / Pesan Tambahan</label>
+          <textarea class="form-control" name="ket" rows="3" placeholder="Opsional..."></textarea>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Tahun Akademik <span class="text-danger">*</span></label>
+          <select class="form-select" name="id_tahun" required>
+            <option value="">-- Pilih Tahun Akademik --</option>
+            @foreach($tahunAkademiks as $ta)
+              <option value="{{ $ta->id_tahun }}">{{ $ta->tahun_akademik }}</option>
+            @endforeach
+          </select>
+        </div>
+
+        <div class="col-md-6 mb-3"></div> <!-- spacer -->
+
+        <div class="col-md-6 mb-4">
+          <label class="form-label">Unggah Dokumen Utama (File 1) <span class="text-danger">*</span></label>
+          <input class="form-control" type="file" name="file1" accept=".pdf" required>
+          <small class="text-muted">Maksimal 10 MB, wajib format PDF.</small>
+        </div>
+
+        <div class="col-md-6 mb-4">
+          <label class="form-label">Unggah Lampiran Tambahan (File 2)</label>
+          <input class="form-control" type="file" name="file2" accept=".pdf">
+          <small class="text-muted">Opsional. Maksimal 10 MB, format PDF.</small>
+        </div>
+
+      </div>
+
+      <div class="d-flex justify-content-end gap-2 mt-3">
+        <a href="{{ route('pengajuan.index') }}" class="btn btn-outline-danger">Batal</a>
+        <button type="submit" class="btn btn-primary"><i class="ti ti-send"></i> Kirim Pengajuan</button>
+      </div>
+    </form>
+  </div>
+</div>
+@endsection

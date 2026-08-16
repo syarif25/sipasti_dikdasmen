@@ -29,7 +29,6 @@ class PenggunaController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users',
-            'email' => 'nullable|email|max:255',
             'password' => 'required|string|min:6',
             'no_hp' => 'nullable|string|max:20',
             'level' => 'required|integer',
@@ -66,7 +65,6 @@ class PenggunaController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users,username,' . $user->id_user . ',id_user',
-            'email' => 'nullable|email|max:255',
             'password' => 'nullable|string|min:6',
             'no_hp' => 'nullable|string|max:20',
             'level' => 'required|integer',

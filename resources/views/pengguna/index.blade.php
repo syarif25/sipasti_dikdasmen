@@ -118,11 +118,7 @@
                         <label class="form-label">Username</label>
                         <input type="text" class="form-control" name="username" value="{{ $item->username }}" required>
                       </div>
-                      <div class="col-md-6 mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" name="email" value="{{ $item->email }}">
-                      </div>
-                      <div class="col-md-6 mb-3">
+                      <div class="col-md-12 mb-3">
                         <label class="form-label">No HP</label>
                         <input type="text" class="form-control" name="no_hp" value="{{ $item->no_hp }}">
                       </div>
@@ -204,11 +200,7 @@
               <label class="form-label">Username</label>
               <input type="text" class="form-control" name="username" required>
             </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Email</label>
-              <input type="email" class="form-control" name="email">
-            </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-12 mb-3">
               <label class="form-label">No HP</label>
               <input type="text" class="form-control" name="no_hp">
             </div>

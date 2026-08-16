@@ -56,10 +56,10 @@
             <th><h6 class="fw-semibold mb-0 text-uppercase fs-2">Perihal</h6></th>
             <th><h6 class="fw-semibold mb-0 text-uppercase fs-2">Tujuan</h6></th>
             <th><h6 class="fw-semibold mb-0 text-uppercase fs-2">Jenis Surat</h6></th>
-            <th><h6 class="fw-semibold mb-0 text-uppercase fs-2">Posisi Akhir</h6></th>
-            <th><h6 class="fw-semibold mb-0 text-uppercase fs-2">Tgl Kirim</h6></th>
-            <!-- AKSI COLUMN HIDDEN -->
-            <th><h6 class="fw-semibold mb-0 text-uppercase fs-2">Detail</h6></th>
+            <th><h6 class="fw-semibold mb-0 text-uppercase fs-2">Posisi</h6></th>
+            <th><h6 class="fw-semibold mb-0 text-uppercase fs-2">Status</h6></th>
+            <th><h6 class="fw-semibold mb-0 text-uppercase fs-2">Tgl</h6></th>
+            <th><h6 class="fw-semibold mb-0 text-uppercase fs-2">Aksi</h6></th>
           </tr>
         </thead>
         <tbody>
@@ -68,40 +68,48 @@
             $latestLog = $item->logs->first();
             $posisi = $latestLog ? $latestLog->posisi : '-';
             $jabatanPosisi = $latestLog ? $latestLog->jabatan : '-';
+            $status = $latestLog ? $latestLog->status : 'DALAM PROSES';
           @endphp
           <tr>
             <td>{{ $loop->iteration }}</td>
-            <td class="fw-bold">{{ $item->lembaga ? $item->lembaga->nama_lembaga : '-' }}</td>
-            <td style="white-space: normal; min-width: 200px;">{{ $item->perihal }}</td>
+            <td class="fw-bold">{{ $item->lembaga ? $item->lembaga->singkatan_lembaga : '-' }}</td>
+            <td style="white-space: normal; min-width: 250px;">{{ $item->perihal }}</td>
             <td>{{ $item->tujuan }}</td>
             <td>{{ $item->jenis_surat }}</td>
             <td>
               <div class="fw-bold">{{ $posisi }}</div>
               <div class="fw-semibold text-muted">({{ $jabatanPosisi }})</div>
             </td>
-            <td>{{ \Carbon\Carbon::parse($item->tgl_upload)->format('d-m-Y H:i:s') }}</td>
             <td>
-              <div class="d-flex flex-column gap-1">
-                <button type="button" class="btn btn-sm btn-info w-100 mb-1 btn-lacak" data-id="{{ $item->id_pengajuan }}">
+              @if($status == 'SELESAI' || $status == 'FINAL' || $status == 'DIARSIP')
+                <span class="badge bg-success text-white"><i class="ti ti-check"></i> DIARSIP</span>
+              @elseif($status == 'REVISI')
+                <span class="badge bg-danger text-white"><i class="ti ti-alert-triangle"></i> REVISI</span>
+              @else
+                <span class="badge bg-warning text-dark"><i class="ti ti-loader"></i> DALAM PROSES</span>
+              @endif
+            </td>
+            <td>{{ \Carbon\Carbon::parse($item->tgl_upload)->format('Y-m-d H:i:s') }}</td>
+            <td>
+              <div class="d-flex gap-1">
+                <button type="button" class="btn btn-sm btn-info btn-lacak text-white" data-id="{{ $item->id_pengajuan }}">
                   <i class="ti ti-search"></i> LACAK
                 </button>
-                <div class="d-flex gap-1">
-                  @if($latestLog && $latestLog->file1)
-                    <a href="{{ Storage::url($latestLog->file1) }}" target="_blank" class="btn btn-sm btn-outline-primary flex-fill">
-                      <i class="ti ti-file-description"></i> FILE 1
-                    </a>
-                  @else
-                    <button class="btn btn-sm btn-outline-secondary flex-fill" disabled><i class="ti ti-file-description"></i> FILE 1</button>
-                  @endif
-                  
-                  @if($latestLog && $latestLog->file2)
-                    <a href="{{ Storage::url($latestLog->file2) }}" target="_blank" class="btn btn-sm btn-outline-primary flex-fill">
-                      <i class="ti ti-file-description"></i> FILE 2
-                    </a>
-                  @else
-                    <button class="btn btn-sm btn-outline-secondary flex-fill" disabled><i class="ti ti-file-description"></i> FILE 2</button>
-                  @endif
-                </div>
+                @if($latestLog && $latestLog->file1)
+                  <a href="{{ Storage::url($latestLog->file1) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                    <i class="ti ti-file-description"></i> FILE 1
+                  </a>
+                @else
+                  <button class="btn btn-sm btn-outline-secondary" disabled><i class="ti ti-file-description"></i> FILE 1</button>
+                @endif
+                
+                @if($latestLog && $latestLog->file2)
+                  <a href="{{ Storage::url($latestLog->file2) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                    <i class="ti ti-file-description"></i> FILE 2
+                  </a>
+                @else
+                  <button class="btn btn-sm btn-outline-secondary" disabled><i class="ti ti-file-description"></i> FILE 2</button>
+                @endif
               </div>
             </td>
           </tr>

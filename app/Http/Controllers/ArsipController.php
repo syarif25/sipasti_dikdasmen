@@ -13,12 +13,10 @@ class ArsipController extends Controller
      */
     public function index()
     {
-        // Get pengajuan where latest log status IS Final/Selesai/Arsip
+        // Get all pengajuan
         $pengajuans = Pengajuan::with(['lembaga', 'logs' => function($q) {
             $q->latest();
-        }])->whereHas('logs', function($q) {
-            $q->whereIn('status', ['FINAL', 'SELESAI', 'ARSIP']);
-        })->get();
+        }])->get();
 
         $jenisSurats = JenisSurat::all();
         

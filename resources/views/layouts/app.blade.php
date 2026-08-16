@@ -13,7 +13,13 @@
   <!-- Core Css -->
   <link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}" />
 
-  <title>Modernize Bootstrap Admin</title>
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+  
+  <!-- SweetAlert2 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css">
+
+  <title>SIPASTI Dikdasmen</title>
 
 </head>
 
@@ -39,6 +45,7 @@
   </div>
   <div class="dark-transparent sidebartoggler"></div>
   <!-- Import Js Files -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="{{ asset('assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('assets/libs/simplebar/dist/simplebar.min.js') }}"></script>
   <script src="{{ asset('assets/js/theme/app.init.js') }}"></script>
@@ -48,5 +55,37 @@
 
   <!-- solar icons -->
   <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+  <!-- SweetAlert2 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
+
+  <!-- Global SweetAlert Logic -->
+  <script>
+    @if(session('success'))
+      Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: '{{ session('success') }}',
+        timer: 3000,
+        showConfirmButton: false
+      });
+    @endif
+
+    @if(session('error'))
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal!',
+        text: '{{ session('error') }}',
+        timer: 3000,
+        showConfirmButton: false
+      });
+    @endif
+  </script>
+
+  @stack('scripts')
 </body>
 </html>

@@ -90,7 +90,7 @@
           </a>
           <ul aria-expanded="false" class="collapse first-level">
             <li class="sidebar-item">
-              <a href="#" class="sidebar-link">
+              <a href="{{ route('master.lembaga.index') }}" class="sidebar-link">
                 <div class="round-16 d-flex align-items-center justify-content-center">
                   <i class="ti ti-circle"></i>
                 </div>
@@ -98,7 +98,7 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a href="#" class="sidebar-link">
+              <a href="{{ route('master.jabatan.index') }}" class="sidebar-link">
                 <div class="round-16 d-flex align-items-center justify-content-center">
                   <i class="ti ti-circle"></i>
                 </div>
@@ -106,11 +106,19 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a href="#" class="sidebar-link">
+              <a href="{{ route('master.jenis-surat.index') }}" class="sidebar-link">
                 <div class="round-16 d-flex align-items-center justify-content-center">
                   <i class="ti ti-circle"></i>
                 </div>
                 <span class="hide-menu">Jenis Surat</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a href="{{ route('master.tahun-akademik.index') }}" class="sidebar-link">
+                <div class="round-16 d-flex align-items-center justify-content-center">
+                  <i class="ti ti-circle"></i>
+                </div>
+                <span class="hide-menu">Tahun Akademik</span>
               </a>
             </li>
           </ul>

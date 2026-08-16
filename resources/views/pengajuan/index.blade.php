@@ -46,7 +46,7 @@
         <select id="filterJenisSurat" class="form-select">
           <option value="">Semua Jenis Surat</option>
           @foreach($jenisSurats as $js)
-            <option value="{{ $js->jenis_surat }}">{{ $js->jenis_surat }}</option>
+            <option value="{{ $js->nama_jenis }}">{{ $js->nama_jenis }}</option>
           @endforeach
         </select>
       </div>

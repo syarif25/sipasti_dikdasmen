@@ -102,7 +102,7 @@
                       <label class="form-label">Jenis Surat</label>
                       <select class="form-select" name="jenis_surat" required>
                         @foreach($jenisSurats as $js)
-                          <option value="{{ $js->jenis_surat }}" {{ $item->jenis_surat == $js->jenis_surat ? 'selected' : '' }}>{{ $js->jenis_surat }}</option>
+                          <option value="{{ $js->nama_jenis }}" {{ $item->jenis_surat == $js->nama_jenis ? 'selected' : '' }}>{{ $js->nama_jenis }}</option>
                         @endforeach
                       </select>
                     </div>

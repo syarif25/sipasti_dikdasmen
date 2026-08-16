@@ -46,7 +46,7 @@
           <select class="form-select" name="jenis_surat" required>
             <option value="">-- Pilih Jenis Surat --</option>
             @foreach($jenisSurats as $js)
-              <option value="{{ $js->jenis_surat }}">{{ $js->jenis_surat }}</option>
+              <option value="{{ $js->nama_jenis }}">{{ $js->nama_jenis }}</option>
             @endforeach
           </select>
         </div>

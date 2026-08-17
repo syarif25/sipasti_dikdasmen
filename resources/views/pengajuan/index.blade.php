@@ -88,26 +88,26 @@
             <td>{{ \Carbon\Carbon::parse($item->tgl_upload)->format('d-m-Y H:i:s') }}</td>
             <td>
               @if(Auth::user()->level >= 2)
-                <!-- Contoh Logika Sederhana: Tampilkan tombol aksi jika bukan level 1 -->
-                @if($status == 'DALAM PROSES' || $status == 'REVISI')
-                <div class="d-flex flex-column gap-1">
+                @if($status == 'k' || $status == 'DALAM PROSES')
                   <form action="{{ route('pengajuan.terima', $item->id_pengajuan) }}" method="POST">
                     @csrf
-                    <button type="submit" class="btn btn-sm btn-success w-100 mb-1"><i class="ti ti-check"></i> TERIMA</button>
+                    <button type="submit" class="btn btn-sm btn-success w-100 mb-1"><i class="ti ti-check"></i> TERIMA SURAT</button>
                   </form>
-                  <button type="button" class="btn btn-sm btn-warning w-100 mb-1" data-bs-toggle="modal" data-bs-target="#modalTeruskan{{ $item->id_pengajuan }}">
-                    <i class="ti ti-arrow-right"></i> TERUSKAN
-                  </button>
-                  <button type="button" class="btn btn-sm btn-danger w-100" data-bs-toggle="modal" data-bs-target="#modalKembalikan{{ $item->id_pengajuan }}">
-                    <i class="ti ti-arrow-back-up"></i> KEMBALIKAN
-                  </button>
-                </div>
+                @elseif($status == 't' || $status == 'ACC KABID' || $status == 'REVISI')
+                  <div class="d-flex flex-column gap-1">
+                    <button type="button" class="btn btn-sm btn-warning w-100 mb-1" data-bs-toggle="modal" data-bs-target="#modalTeruskan{{ $item->id_pengajuan }}">
+                      <i class="ti ti-arrow-right"></i> TERUSKAN
+                    </button>
+                    <button type="button" class="btn btn-sm btn-danger w-100" data-bs-toggle="modal" data-bs-target="#modalKembalikan{{ $item->id_pengajuan }}">
+                      <i class="ti ti-arrow-back-up"></i> KEMBALIKAN
+                    </button>
+                  </div>
                 @else
                   <span class="badge bg-secondary">{{ $status }}</span>
                 @endif
               @else
                 <!-- Sekolah/Lembaga melihat status -->
-                @if($status == 'k' || $status == 'DALAM PROSES')
+                @if($status == 'k' || $status == 't' || $status == 'DALAM PROSES' || $status == 'ACC KABID')
                   <span class="badge bg-warning">sedang proses</span>
                 @elseif($status == 'REVISI')
                   <span class="badge bg-danger">revisi</span>

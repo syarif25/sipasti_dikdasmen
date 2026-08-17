@@ -119,13 +119,18 @@ class PengajuanController extends Controller
             'catatan' => 'nullable|string',
         ]);
 
+        $pengajuan = Pengajuan::findOrFail($id);
+        $latestLog = $pengajuan->logs()->latest()->first();
+
         Log::create([
             'id_pengajuan' => $id,
-            'posisi' => 'Diterima',
-            'jabatan' => auth()->user()->jabatan->nama_jabatan ?? 'Staf',
-            'catatan' => $request->catatan,
+            'posisi' => $latestLog ? $latestLog->posisi : 'DIKDASMEN',
+            'jabatan' => $latestLog ? $latestLog->jabatan : 'administrator',
+            'catatan' => $request->catatan ?: 'Surat telah diterima oleh Admin.',
             'tanggal_posisi' => now(),
-            'status' => 'DALAM PROSES',
+            'file1' => $latestLog ? $latestLog->file1 : null,
+            'file2' => $latestLog ? $latestLog->file2 : null,
+            'status' => 't',
         ]);
 
         return redirect()->back()->with('success', 'Dokumen telah diterima.');

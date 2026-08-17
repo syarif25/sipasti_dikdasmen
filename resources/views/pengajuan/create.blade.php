@@ -46,17 +46,7 @@
           </select>
         </div>
 
-        <div class="col-md-6 mb-3">
-          <label class="form-label">Tujuan <span class="text-danger">*</span></label>
-          <select class="form-select" name="tujuan" required>
-            <option value="">-- Pilih Tujuan --</option>
-            <option value="Pengasuh">Pengasuh</option>
-            <option value="Ketua Yayasan">Ketua Yayasan</option>
-            <option value="BPK2M">BPK2M</option>
-            <option value="Bendahara">Bendahara</option>
-            <option value="Kabid DIKDASMEN">Kabid DIKDASMEN</option>
-          </select>
-        </div>
+        <input type="hidden" name="tujuan" value="Admin Dikdasmen">
 
         <div class="col-md-12 mb-3">
           <label class="form-label">Perihal <span class="text-danger">*</span></label>

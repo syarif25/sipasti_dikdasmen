@@ -168,17 +168,18 @@
                             <option value="Bendahara">Bendahara</option>
                             <option value="Sekretariat">Sekretariat</option>
                           @else
-                            <option value="Kasubag">Kasubag</option>
-                            <option value="Kabag">Kabag</option>
-                            <option value="KATU">KATU</option>
+                            <option value="Kasubag">Kasubag (Langkah 1)</option>
                           @endif
                         @elseif($userLevel == 6) {{-- Kabid --}}
                           <option value="Admin Dikdasmen">Admin Dikdasmen (Telah ACC Kabid)</option>
-                        @else {{-- Kasubag / Kabag / KATU --}}
+                        @elseif($userLevel == 5) {{-- KATU --}}
+                          <option value="Kabid">Kabid (Langkah 4)</option>
+                        @elseif($userLevel == 4) {{-- Kabag --}}
+                          <option value="KATU">KATU (Langkah 3)</option>
+                        @elseif($userLevel == 3) {{-- Kasubag --}}
+                          <option value="Kabag">Kabag (Langkah 2)</option>
+                        @else {{-- Fallback --}}
                           <option value="Kasubag">Kasubag</option>
-                          <option value="Kabag">Kabag</option>
-                          <option value="KATU">KATU</option>
-                          <option value="Kabid">Kabid</option>
                         @endif
                       </select>
                     </div>

@@ -102,12 +102,12 @@ class PengajuanController extends Controller
         Log::create([
             'id_pengajuan' => $idPengajuan,
             'posisi' => 'DIKDASMEN',
-            'jabatan' => 'ADMINISTRATOR',
+            'jabatan' => 'administrator',
             'catatan' => 'Pengajuan awal diunggah.',
             'tanggal_posisi' => now(),
             'file1' => $file1Path,
             'file2' => $file2Path,
-            'status' => 'K',
+            'status' => 'k',
         ]);
 
         return redirect()->route('pengajuan.index')->with('success', 'Pengajuan berhasil ditambahkan!');

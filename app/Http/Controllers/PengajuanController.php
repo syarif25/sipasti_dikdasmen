@@ -76,6 +76,7 @@ class PengajuanController extends Controller
         $pengajuan->id_pengajuan = $idPengajuan;
         $pengajuan->nomor_surat = $request->nomor_surat;
         $pengajuan->jenis_surat = $request->jenis_surat;
+        $pengajuan->perihal = $request->perihal;
         $pengajuan->tujuan = collect(Jabatan::where('id_jabatan', $request->tujuan)->first())->get('nama_jabatan', $request->tujuan);
         $pengajuan->ket = $request->ket;
         $pengajuan->tgl_upload = now();

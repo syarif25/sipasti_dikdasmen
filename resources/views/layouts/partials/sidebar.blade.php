@@ -51,7 +51,7 @@
         <!-- GOD MODE (SUPER ADMIN)                         -->
         <!-- Asumsi Super Admin = Level 7                   -->
         <!-- ============================================== -->
-        @if(Auth::check() && Auth::user()->level >= 7)
+        @if(Auth::check() && Auth::user()->level >= 8)
         <li class="nav-small-cap">
           <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
           <span class="hide-menu">God Mode</span>

@@ -101,8 +101,8 @@ class PengajuanController extends Controller
         // Create initial Log
         Log::create([
             'id_pengajuan' => $idPengajuan,
-            'posisi' => 'dikdasmen',
-            'jabatan' => 'administrator',
+            'posisi' => 'DIKDASMEN',
+            'jabatan' => 'ADMINISTRATOR',
             'catatan' => 'Pengajuan awal diunggah.',
             'tanggal_posisi' => now(),
             'file1' => $file1Path,

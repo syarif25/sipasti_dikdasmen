@@ -70,7 +70,7 @@
         <tbody>
           @foreach($pengajuans as $item)
           @php
-            $latestLog = $item->logs->first();
+            $latestLog = $item->logs->sortByDesc('id_log')->first();
             $posisi = $latestLog ? $latestLog->posisi : '-';
             $jabatanPosisi = $latestLog ? $latestLog->jabatan : '-';
             $status = $latestLog ? $latestLog->status : 'DALAM PROSES';
@@ -154,7 +154,7 @@
                   </div>
                   <div class="modal-body">
                     @php
-                      $latestLog = $item->logs->first();
+                      $latestLog = $item->logs->sortByDesc('id_log')->first();
                       $userLevel = auth()->user()->level;
                       $isAccKabid = ($latestLog && $latestLog->status == 'ACC KABID');
                     @endphp

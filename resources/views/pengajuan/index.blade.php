@@ -107,12 +107,12 @@
                 @endif
               @else
                 <!-- Sekolah/Lembaga melihat status -->
-                @if($status == 'DALAM PROSES')
-                  <span class="badge bg-warning">DALAM PROSES</span>
+                @if($status == 'k' || $status == 'DALAM PROSES')
+                  <span class="badge bg-warning">sedang proses</span>
                 @elseif($status == 'REVISI')
-                  <span class="badge bg-danger">REVISI</span>
+                  <span class="badge bg-danger">revisi</span>
                 @else
-                  <span class="badge bg-secondary">{{ $status }}</span>
+                  <span class="badge bg-secondary">{{ strtolower($status) }}</span>
                 @endif
               @endif
             </td>

@@ -29,12 +29,7 @@
     <form action="{{ route('pengajuan.store') }}" method="POST" enctype="multipart/form-data">
       @csrf
       <div class="row">
-        <!-- Pengirim (Readonly) -->
-        <div class="col-md-6 mb-3">
-          <label class="form-label">Lembaga Pengirim</label>
-          <input type="text" class="form-control" value="{{ Auth::user()->lembaga->nama_lembaga ?? 'Tidak Terkait Lembaga' }}" disabled readonly>
-          <small class="text-muted">Data ditarik otomatis dari profil Anda.</small>
-        </div>
+
 
         <div class="col-md-6 mb-3">
           <label class="form-label">Nomor Surat <span class="text-danger">*</span></label>
@@ -52,7 +47,7 @@
         </div>
 
         <div class="col-md-6 mb-3">
-          <label class="form-label">Tujuan Jabatan <span class="text-danger">*</span></label>
+          <label class="form-label">Tujuan <span class="text-danger">*</span></label>
           <select class="form-select" name="tujuan" required>
             <option value="">-- Pilih Tujuan --</option>
             <option value="Pengasuh">Pengasuh</option>

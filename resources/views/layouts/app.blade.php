@@ -28,6 +28,14 @@
         document.documentElement.setAttribute('data-bs-theme', savedTheme);
     }
   </script>
+  <style>
+    /* Fix DataTables length select dropdown overlapping text */
+    .dataTables_length select.form-select {
+      min-width: 65px !important;
+      padding-right: 1.5rem !important;
+      background-position: right 0.4rem center !important;
+    }
+  </style>
 </head>
 
 <body class="link-sidebar">

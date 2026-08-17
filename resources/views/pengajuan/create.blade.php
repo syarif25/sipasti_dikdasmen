@@ -33,7 +33,7 @@
 
         <div class="col-md-6 mb-3">
           <label class="form-label">Nomor Surat <span class="text-danger">*</span></label>
-          <input type="text" class="form-control" name="nomor_surat" required placeholder="Contoh: 001/MTS/VIII/2024">
+          <input type="text" class="form-control" name="nomor_surat" required placeholder="Contoh: 001/VIII/2026">
         </div>
 
         <div class="col-md-6 mb-3">

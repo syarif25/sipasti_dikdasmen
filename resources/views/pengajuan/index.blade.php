@@ -170,6 +170,11 @@
                     </div>
 
                     <div class="mb-3">
+                      <label class="form-label">Tujuan Surat</label>
+                      <input type="text" class="form-control" value="{{ $item->tujuan }}" readonly>
+                    </div>
+
+                    <div class="mb-3">
                       <label class="form-label">Tujuan (Jabatan Berikutnya)</label>
                       <select class="form-select" name="tujuan_jabatan" required>
                         @if($userLevel >= 7) {{-- Admin Dikdasmen --}}

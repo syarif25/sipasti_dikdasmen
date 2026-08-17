@@ -96,7 +96,7 @@
                 @elseif($status == 't' || $status == 'ACC KABID' || $status == 'REVISI')
                   <div class="d-flex flex-column gap-1">
                     <button type="button" class="btn btn-sm btn-warning w-100 mb-1" data-bs-toggle="modal" data-bs-target="#modalTeruskan{{ $item->id_pengajuan }}">
-                      <i class="ti ti-arrow-right"></i> TERUSKAN
+                      <i class="ti ti-arrow-right"></i> LANJUTKAN
                     </button>
                     <button type="button" class="btn btn-sm btn-danger w-100" data-bs-toggle="modal" data-bs-target="#modalKembalikan{{ $item->id_pengajuan }}">
                       <i class="ti ti-arrow-back-up"></i> KEMBALIKAN
@@ -149,7 +149,7 @@
                  <form action="{{ route('pengajuan.teruskan', $item->id_pengajuan) }}" method="POST" enctype="multipart/form-data">
                   @csrf
                   <div class="modal-header">
-                    <h5 class="modal-title">Teruskan Pengajuan</h5>
+                    <h5 class="modal-title">Lanjutkan Pengajuan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
@@ -160,6 +160,16 @@
                     @endphp
 
                     <div class="mb-3">
+                      <label class="form-label">Nomor Surat</label>
+                      <input type="text" class="form-control" value="{{ $item->nomor_surat }}" readonly>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label">Perihal</label>
+                      <input type="text" class="form-control" value="{{ $item->perihal }}" readonly>
+                    </div>
+
+                    <div class="mb-3">
                       <label class="form-label">Tujuan (Jabatan Berikutnya)</label>
                       <select class="form-select" name="tujuan_jabatan" required>
                         @if($userLevel >= 7) {{-- Admin Dikdasmen --}}
@@ -168,16 +178,27 @@
                             <option value="Bendahara">Bendahara</option>
                             <option value="Sekretariat">Sekretariat</option>
                           @else
-                            <option value="Kasubag">Kasubag (Langkah 1)</option>
+                            @php
+                              $filteredJabs = $jabatans->filter(function($jab) {
+                                  return in_array(strtolower($jab->nama_jabatan), ['kasubag', 'kabag', 'katu', 'ka.tu', 'ka. tu', 'kepala tata usaha', 'ktu']);
+                              });
+                            @endphp
+                            @if($filteredJabs->isNotEmpty())
+                              @foreach($filteredJabs as $jab)
+                                <option value="{{ $jab->id_jabatan }}">{{ $jab->nama_jabatan }}</option>
+                              @endforeach
+                            @else
+                              <option value="Kasubag">Kasubag</option>
+                            @endif
                           @endif
                         @elseif($userLevel == 6) {{-- Kabid --}}
                           <option value="Admin Dikdasmen">Admin Dikdasmen (Telah ACC Kabid)</option>
                         @elseif($userLevel == 5) {{-- KATU --}}
-                          <option value="Kabid">Kabid (Langkah 4)</option>
+                          <option value="Kabid">Kabid</option>
                         @elseif($userLevel == 4) {{-- Kabag --}}
-                          <option value="KATU">KATU (Langkah 3)</option>
+                          <option value="KATU">KATU</option>
                         @elseif($userLevel == 3) {{-- Kasubag --}}
-                          <option value="Kabag">Kabag (Langkah 2)</option>
+                          <option value="Kabag">Kabag</option>
                         @else {{-- Fallback --}}
                           <option value="Kasubag">Kasubag</option>
                         @endif
@@ -204,7 +225,7 @@
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Teruskan</button>
+                    <button type="submit" class="btn btn-primary">Lanjutkan</button>
                   </div>
                 </form>
               </div>
@@ -223,7 +244,27 @@
                   </div>
                   <div class="modal-body">
                     <div class="mb-3">
-                      <label class="form-label">Catatan Revisi</label>
+                      <label class="form-label">Nomor Surat</label>
+                      <input type="text" class="form-control" value="{{ $item->nomor_surat }}" readonly>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label">Perihal</label>
+                      <input type="text" class="form-control" value="{{ $item->perihal }}" readonly>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label">Tujuan Surat</label>
+                      <input type="text" class="form-control" value="{{ $item->tujuan }}" readonly>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label">Nama Pengirim Surat</label>
+                      <input type="text" class="form-control" value="{{ $item->lembaga ? $item->lembaga->nama_lembaga : '-' }}" readonly>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label">Isi Catatan Revisi</label>
                       <textarea class="form-control" name="catatan" rows="4" required placeholder="Tulis alasan pengembalian surat..."></textarea>
                     </div>
                   </div>

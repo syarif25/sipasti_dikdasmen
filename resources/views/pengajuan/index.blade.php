@@ -194,7 +194,7 @@
                               $targetUsers = $usersEselon->filter(fn($u) => in_array($u->level, [3, 4, 5]));
                             @endphp
                             @foreach($targetUsers as $userTarget)
-                              <option value="{{ $userTarget->id_user }}">{{ $userTarget->name }} ({{ $userTarget->jabatan ? $userTarget->jabatan->nama_jabatan : 'Eselon' }})</option>
+                              <option value="{{ $userTarget->id_user }}">{{ $userTarget->name }}</option>
                             @endforeach
                           @endif
                         @elseif($userLevel == 6) {{-- Kabid --}}
@@ -202,17 +202,17 @@
                         @elseif($userLevel == 5) {{-- KATU --}}
                           @php $targetUsers = $usersEselon->filter(fn($u) => $u->level == 6); @endphp
                           @foreach($targetUsers as $userTarget)
-                            <option value="{{ $userTarget->id_user }}">{{ $userTarget->name }} (Kabid)</option>
+                            <option value="{{ $userTarget->id_user }}">{{ $userTarget->name }}</option>
                           @endforeach
                         @elseif($userLevel == 4) {{-- Kabag --}}
                           @php $targetUsers = $usersEselon->filter(fn($u) => $u->level == 5); @endphp
                           @foreach($targetUsers as $userTarget)
-                            <option value="{{ $userTarget->id_user }}">{{ $userTarget->name }} (KATU)</option>
+                            <option value="{{ $userTarget->id_user }}">{{ $userTarget->name }}</option>
                           @endforeach
                         @elseif($userLevel == 3) {{-- Kasubag --}}
                           @php $targetUsers = $usersEselon->filter(fn($u) => $u->level == 4); @endphp
                           @foreach($targetUsers as $userTarget)
-                            <option value="{{ $userTarget->id_user }}">{{ $userTarget->name }} (Kabag)</option>
+                            <option value="{{ $userTarget->id_user }}">{{ $userTarget->name }}</option>
                           @endforeach
                         @else {{-- Fallback --}}
                           <option value="Admin Dikdasmen">Admin Dikdasmen</option>

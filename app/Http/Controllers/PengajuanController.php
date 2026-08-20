@@ -31,9 +31,13 @@ class PengajuanController extends Controller
         $pengajuans = $query->get();
 
         $jenisSurats = JenisSurat::all();
-        $jabatans = Jabatan::all(); // for destination dropdown in action modal
+        // Fetch active users for destination dropdown in action modal
+        $usersEselon = User::with('jabatan')
+            ->whereIn('level', [3, 4, 5, 6])
+            ->where('status', 1)
+            ->get();
         
-        return view('pengajuan.index', compact('pengajuans', 'jenisSurats', 'jabatans'));
+        return view('pengajuan.index', compact('pengajuans', 'jenisSurats', 'usersEselon'));
     }
 
     /**
@@ -145,7 +149,7 @@ class PengajuanController extends Controller
         $isAdminAndAccKabid = (auth()->user()->level >= 7 && $latestLog && $latestLog->status == 'ACC KABID');
 
         $rules = [
-            'tujuan_jabatan' => 'required|string',
+            'tujuan_user_id' => 'required|string',
             'catatan' => 'nullable|string',
         ];
 
@@ -156,8 +160,14 @@ class PengajuanController extends Controller
 
         $request->validate($rules);
 
-        $jabatanTujuan = Jabatan::where('id_jabatan', $request->tujuan_jabatan)->first();
-        $namaTujuan = $jabatanTujuan ? $jabatanTujuan->nama_jabatan : $request->tujuan_jabatan;
+        // tujuan_user_id can be numeric (id_user) or a string ('BPK2M', 'Admin Dikdasmen', etc)
+        $namaTujuan = $request->tujuan_user_id;
+        if (is_numeric($namaTujuan)) {
+            $userTujuan = User::find($namaTujuan);
+            if ($userTujuan) {
+                $namaTujuan = $userTujuan->name;
+            }
+        }
 
         // Set status
         $status = 'DALAM PROSES';

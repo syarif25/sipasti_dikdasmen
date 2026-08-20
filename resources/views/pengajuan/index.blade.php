@@ -88,22 +88,30 @@
             <td>{{ \Carbon\Carbon::parse($item->tgl_upload)->format('d-m-Y H:i:s') }}</td>
             <td>
               @if(Auth::user()->level >= 2)
-                @if($status == 'k' || $status == 'DALAM PROSES')
-                  <form action="{{ route('pengajuan.terima', $item->id_pengajuan) }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-sm btn-success w-100 mb-1"><i class="ti ti-check"></i> TERIMA SURAT</button>
-                  </form>
-                @elseif($status == 't' || $status == 'ACC KABID' || $status == 'REVISI')
-                  <div class="d-flex flex-column gap-1">
-                    <button type="button" class="btn btn-sm btn-warning w-100 mb-1" data-bs-toggle="modal" data-bs-target="#modalTeruskan{{ $item->id_pengajuan }}">
-                      <i class="ti ti-arrow-right"></i> LANJUTKAN
-                    </button>
-                    <button type="button" class="btn btn-sm btn-danger w-100" data-bs-toggle="modal" data-bs-target="#modalKembalikan{{ $item->id_pengajuan }}">
-                      <i class="ti ti-arrow-back-up"></i> KEMBALIKAN
-                    </button>
-                  </div>
+                @php
+                  // Admin Dikdasmen/Super Admin selalu punya akses (fallback) atau jika nama_pengguna sesuai dengan tujuan
+                  $isTargetedUser = (Auth::user()->level >= 7 || strtolower($jabatanPosisi) == strtolower(Auth::user()->name) || strtolower($jabatanPosisi) == 'administrator');
+                @endphp
+                @if($isTargetedUser)
+                  @if($status == 'k' || $status == 'DALAM PROSES')
+                    <form action="{{ route('pengajuan.terima', $item->id_pengajuan) }}" method="POST">
+                      @csrf
+                      <button type="submit" class="btn btn-sm btn-success w-100 mb-1"><i class="ti ti-check"></i> TERIMA SURAT</button>
+                    </form>
+                  @elseif($status == 't' || $status == 'ACC KABID' || $status == 'REVISI')
+                    <div class="d-flex flex-column gap-1">
+                      <button type="button" class="btn btn-sm btn-warning w-100 mb-1" data-bs-toggle="modal" data-bs-target="#modalTeruskan{{ $item->id_pengajuan }}">
+                        <i class="ti ti-arrow-right"></i> LANJUTKAN
+                      </button>
+                      <button type="button" class="btn btn-sm btn-danger w-100" data-bs-toggle="modal" data-bs-target="#modalKembalikan{{ $item->id_pengajuan }}">
+                        <i class="ti ti-arrow-back-up"></i> KEMBALIKAN
+                      </button>
+                    </div>
+                  @else
+                    <span class="badge bg-secondary">{{ $status }}</span>
+                  @endif
                 @else
-                  <span class="badge bg-secondary">{{ $status }}</span>
+                  <span class="badge bg-secondary">{{ in_array($status, ['k', 'DALAM PROSES', 't']) ? 'sedang proses' : strtolower($status) }}</span>
                 @endif
               @else
                 <!-- Sekolah/Lembaga melihat status -->
@@ -174,7 +182,7 @@
 
                     <div class="mb-3">
                       <label class="form-label">Tujuan (Jabatan Berikutnya)</label>
-                      <select class="form-select" name="tujuan_jabatan" required>
+                      <select class="form-select" name="tujuan_user_id" required>
                         @if($userLevel >= 7) {{-- Admin Dikdasmen --}}
                           @if($isAccKabid)
                             <option value="BPK2M">BPK2M</option>
@@ -182,28 +190,32 @@
                             <option value="Sekretariat">Sekretariat</option>
                           @else
                             @php
-                              $filteredJabs = $jabatans->filter(function($jab) {
-                                  return in_array(strtolower($jab->nama_jabatan), ['kasubag', 'kabag', 'katu', 'ka.tu', 'ka. tu', 'kepala tata usaha', 'ktu']);
-                              });
+                              // Admin Dikdasmen bisa meneruskan ke Kasubag(3), Kabag(4), KATU(5)
+                              $targetUsers = $usersEselon->filter(fn($u) => in_array($u->level, [3, 4, 5]));
                             @endphp
-                            @if($filteredJabs->isNotEmpty())
-                              @foreach($filteredJabs as $jab)
-                                <option value="{{ $jab->id_jabatan }}">{{ $jab->nama_jabatan }}</option>
-                              @endforeach
-                            @else
-                              <option value="Kasubag">Kasubag</option>
-                            @endif
+                            @foreach($targetUsers as $userTarget)
+                              <option value="{{ $userTarget->id_user }}">{{ $userTarget->name }} ({{ $userTarget->jabatan ? $userTarget->jabatan->nama_jabatan : 'Eselon' }})</option>
+                            @endforeach
                           @endif
                         @elseif($userLevel == 6) {{-- Kabid --}}
                           <option value="Admin Dikdasmen">Admin Dikdasmen (Telah ACC Kabid)</option>
                         @elseif($userLevel == 5) {{-- KATU --}}
-                          <option value="Kabid">Kabid</option>
+                          @php $targetUsers = $usersEselon->filter(fn($u) => $u->level == 6); @endphp
+                          @foreach($targetUsers as $userTarget)
+                            <option value="{{ $userTarget->id_user }}">{{ $userTarget->name }} (Kabid)</option>
+                          @endforeach
                         @elseif($userLevel == 4) {{-- Kabag --}}
-                          <option value="KATU">KATU</option>
+                          @php $targetUsers = $usersEselon->filter(fn($u) => $u->level == 5); @endphp
+                          @foreach($targetUsers as $userTarget)
+                            <option value="{{ $userTarget->id_user }}">{{ $userTarget->name }} (KATU)</option>
+                          @endforeach
                         @elseif($userLevel == 3) {{-- Kasubag --}}
-                          <option value="Kabag">Kabag</option>
+                          @php $targetUsers = $usersEselon->filter(fn($u) => $u->level == 4); @endphp
+                          @foreach($targetUsers as $userTarget)
+                            <option value="{{ $userTarget->id_user }}">{{ $userTarget->name }} (Kabag)</option>
+                          @endforeach
                         @else {{-- Fallback --}}
-                          <option value="Kasubag">Kasubag</option>
+                          <option value="Admin Dikdasmen">Admin Dikdasmen</option>
                         @endif
                       </select>
                     </div>

@@ -176,7 +176,10 @@
                         <dd class="col-sm-8 fw-bold mb-2">{{ $item->perihal }}</dd>
                         
                         <dt class="col-sm-4 fw-normal">Tujuan Surat</dt>
-                        <dd class="col-sm-8 fw-bold mb-0">{{ $item->tujuan }}</dd>
+                        <dd class="col-sm-8 fw-bold mb-2">{{ $item->tujuan }}</dd>
+                        
+                        <dt class="col-sm-4 fw-normal">Pengirim</dt>
+                        <dd class="col-sm-8 fw-bold mb-0">{{ $item->lembaga ? $item->lembaga->nama_lembaga : '-' }}</dd>
                       </dl>
                     </div>
 

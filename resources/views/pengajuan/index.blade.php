@@ -89,8 +89,18 @@
             <td>
               @if(Auth::user()->level >= 2)
                 @php
-                  // Admin Dikdasmen/Super Admin selalu punya akses (fallback) atau jika nama_pengguna sesuai dengan tujuan
-                  $isTargetedUser = (Auth::user()->level >= 7 || strtolower($jabatanPosisi) == strtolower(Auth::user()->name) || strtolower($jabatanPosisi) == 'administrator');
+                  // Admin Dikdasmen is targeted if document is new (administrator), ACC Kabid, or specifically forwarded to their name.
+                  // Other users are targeted only if the document is specifically at their name.
+                  $isTargetedUser = false;
+                  if (Auth::user()->level >= 7) {
+                      if (strtolower($jabatanPosisi) == 'administrator' || $status == 'ACC KABID' || strtolower($jabatanPosisi) == strtolower(Auth::user()->name)) {
+                          $isTargetedUser = true;
+                      }
+                  } else {
+                      if (strtolower($jabatanPosisi) == strtolower(Auth::user()->name)) {
+                          $isTargetedUser = true;
+                      }
+                  }
                 @endphp
                 @if($isTargetedUser)
                   @if($status == 'k' || $status == 'DALAM PROSES')

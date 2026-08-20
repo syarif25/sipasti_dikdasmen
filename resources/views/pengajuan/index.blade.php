@@ -159,19 +159,17 @@
                       $isAccKabid = ($latestLog && $latestLog->status == 'ACC KABID');
                     @endphp
 
-                    <div class="mb-3">
-                      <label class="form-label">Nomor Surat</label>
-                      <input type="text" class="form-control" value="{{ $item->nomor_surat }}" readonly>
-                    </div>
-
-                    <div class="mb-3">
-                      <label class="form-label">Perihal</label>
-                      <input type="text" class="form-control" value="{{ $item->perihal }}" readonly>
-                    </div>
-
-                    <div class="mb-3">
-                      <label class="form-label">Tujuan Surat</label>
-                      <input type="text" class="form-control" value="{{ $item->tujuan }}" readonly>
+                    <div class="bg-light p-3 rounded mb-4 border">
+                      <dl class="row mb-0">
+                        <dt class="col-sm-4 text-muted fw-normal">Nomor Surat</dt>
+                        <dd class="col-sm-8 fw-bold mb-2">{{ $item->nomor_surat }}</dd>
+                        
+                        <dt class="col-sm-4 text-muted fw-normal">Perihal</dt>
+                        <dd class="col-sm-8 fw-bold mb-2">{{ $item->perihal }}</dd>
+                        
+                        <dt class="col-sm-4 text-muted fw-normal">Tujuan Surat</dt>
+                        <dd class="col-sm-8 fw-bold mb-0">{{ $item->tujuan }}</dd>
+                      </dl>
                     </div>
 
                     <div class="mb-3">
@@ -248,24 +246,20 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <div class="mb-3">
-                      <label class="form-label">Nomor Surat</label>
-                      <input type="text" class="form-control" value="{{ $item->nomor_surat }}" readonly>
-                    </div>
-
-                    <div class="mb-3">
-                      <label class="form-label">Perihal</label>
-                      <input type="text" class="form-control" value="{{ $item->perihal }}" readonly>
-                    </div>
-
-                    <div class="mb-3">
-                      <label class="form-label">Tujuan Surat</label>
-                      <input type="text" class="form-control" value="{{ $item->tujuan }}" readonly>
-                    </div>
-
-                    <div class="mb-3">
-                      <label class="form-label">Nama Pengirim Surat</label>
-                      <input type="text" class="form-control" value="{{ $item->lembaga ? $item->lembaga->nama_lembaga : '-' }}" readonly>
+                    <div class="bg-light p-3 rounded mb-4 border">
+                      <dl class="row mb-0">
+                        <dt class="col-sm-4 text-muted fw-normal">Nomor Surat</dt>
+                        <dd class="col-sm-8 fw-bold mb-2">{{ $item->nomor_surat }}</dd>
+                        
+                        <dt class="col-sm-4 text-muted fw-normal">Perihal</dt>
+                        <dd class="col-sm-8 fw-bold mb-2">{{ $item->perihal }}</dd>
+                        
+                        <dt class="col-sm-4 text-muted fw-normal">Tujuan Surat</dt>
+                        <dd class="col-sm-8 fw-bold mb-2">{{ $item->tujuan }}</dd>
+                        
+                        <dt class="col-sm-4 text-muted fw-normal">Pengirim</dt>
+                        <dd class="col-sm-8 fw-bold mb-0">{{ $item->lembaga ? $item->lembaga->nama_lembaga : '-' }}</dd>
+                      </dl>
                     </div>
 
                     <div class="mb-3">

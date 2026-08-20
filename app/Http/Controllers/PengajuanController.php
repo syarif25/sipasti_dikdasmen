@@ -32,10 +32,12 @@ class PengajuanController extends Controller
         $pengajuans = $query->get();
 
         $jenisSurats = JenisSurat::all();
-        // Fetch active users for destination dropdown in action modal
+        // Fetch active users for destination dropdown in action modal, sorted by level and name
         $usersEselon = User::with('jabatan')
             ->whereIn('level', [3, 4, 5, 6])
             ->where('status', 1)
+            ->orderBy('level', 'asc')
+            ->orderBy('name', 'asc')
             ->get();
         
         return view('pengajuan.index', compact('pengajuans', 'jenisSurats', 'usersEselon'));

@@ -7,6 +7,7 @@ use App\Models\Log;
 use App\Models\TahunAkademik;
 use App\Models\JenisSurat;
 use App\Models\Jabatan;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 

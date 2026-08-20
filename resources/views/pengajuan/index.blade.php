@@ -160,14 +160,14 @@
                     @endphp
 
                     <div class="bg-light p-3 rounded mb-4 border">
-                      <dl class="row mb-0">
-                        <dt class="col-sm-4 text-muted fw-normal">Nomor Surat</dt>
+                      <dl class="row mb-0 text-dark">
+                        <dt class="col-sm-4 fw-normal">Nomor Surat</dt>
                         <dd class="col-sm-8 fw-bold mb-2">{{ $item->nomor_surat }}</dd>
                         
-                        <dt class="col-sm-4 text-muted fw-normal">Perihal</dt>
+                        <dt class="col-sm-4 fw-normal">Perihal</dt>
                         <dd class="col-sm-8 fw-bold mb-2">{{ $item->perihal }}</dd>
                         
-                        <dt class="col-sm-4 text-muted fw-normal">Tujuan Surat</dt>
+                        <dt class="col-sm-4 fw-normal">Tujuan Surat</dt>
                         <dd class="col-sm-8 fw-bold mb-0">{{ $item->tujuan }}</dd>
                       </dl>
                     </div>
@@ -247,17 +247,17 @@
                   </div>
                   <div class="modal-body">
                     <div class="bg-light p-3 rounded mb-4 border">
-                      <dl class="row mb-0">
-                        <dt class="col-sm-4 text-muted fw-normal">Nomor Surat</dt>
+                      <dl class="row mb-0 text-dark">
+                        <dt class="col-sm-4 fw-normal">Nomor Surat</dt>
                         <dd class="col-sm-8 fw-bold mb-2">{{ $item->nomor_surat }}</dd>
                         
-                        <dt class="col-sm-4 text-muted fw-normal">Perihal</dt>
+                        <dt class="col-sm-4 fw-normal">Perihal</dt>
                         <dd class="col-sm-8 fw-bold mb-2">{{ $item->perihal }}</dd>
                         
-                        <dt class="col-sm-4 text-muted fw-normal">Tujuan Surat</dt>
+                        <dt class="col-sm-4 fw-normal">Tujuan Surat</dt>
                         <dd class="col-sm-8 fw-bold mb-2">{{ $item->tujuan }}</dd>
                         
-                        <dt class="col-sm-4 text-muted fw-normal">Pengirim</dt>
+                        <dt class="col-sm-4 fw-normal">Pengirim</dt>
                         <dd class="col-sm-8 fw-bold mb-0">{{ $item->lembaga ? $item->lembaga->nama_lembaga : '-' }}</dd>
                       </dl>
                     </div>

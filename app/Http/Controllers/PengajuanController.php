@@ -195,7 +195,7 @@ class PengajuanController extends Controller
 
         Log::create([
             'id_pengajuan' => $id,
-            'posisi' => 'DIKTI',
+            'posisi' => 'DIKDASMEN',
             'jabatan' => $namaTujuan,
             'catatan' => $request->catatan,
             'tanggal_posisi' => now(),

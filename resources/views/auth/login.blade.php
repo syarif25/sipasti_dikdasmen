@@ -30,10 +30,15 @@
                   </div>
                   <div class="mb-4">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" required>
-                    @error('password')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                    <div class="input-group">
+                      <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" required>
+                      <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                        <i class="ti ti-eye"></i>
+                      </button>
+                      @error('password')
+                          <div class="invalid-feedback">{{ $message }}</div>
+                      @enderror
+                    </div>
                   </div>
                   <div class="d-flex align-items-center justify-content-between mb-4">
                     <div class="form-check">
@@ -53,4 +58,25 @@
       </div>
     </div>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const togglePassword = document.querySelector('#togglePassword');
+      const password = document.querySelector('#password');
+      if (togglePassword && password) {
+        togglePassword.addEventListener('click', function (e) {
+          const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+          password.setAttribute('type', type);
+          const icon = this.querySelector('i');
+          if (type === 'password') {
+            icon.classList.remove('ti-eye-off');
+            icon.classList.add('ti-eye');
+          } else {
+            icon.classList.remove('ti-eye');
+            icon.classList.add('ti-eye-off');
+          }
+        });
+      }
+    });
+  </script>
 @endsection

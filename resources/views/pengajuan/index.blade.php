@@ -103,12 +103,12 @@
                   }
                 @endphp
                 @if($isTargetedUser)
-                  @if($status == 'k' || $status == 'DALAM PROSES')
+                  @if(Auth::user()->level >= 7 && $status == 'k')
                     <form action="{{ route('pengajuan.terima', $item->id_pengajuan) }}" method="POST">
                       @csrf
                       <button type="submit" class="btn btn-sm btn-success w-100 mb-1"><i class="ti ti-check"></i> TERIMA SURAT</button>
                     </form>
-                  @elseif($status == 't' || $status == 'ACC KABID' || $status == 'REVISI')
+                  @elseif($status == 't' || $status == 'DALAM PROSES' || $status == 'ACC KABID' || $status == 'REVISI')
                     <div class="d-flex flex-column gap-1">
                       <button type="button" class="btn btn-sm btn-warning w-100 mb-1" data-bs-toggle="modal" data-bs-target="#modalTeruskan{{ $item->id_pengajuan }}">
                         <i class="ti ti-arrow-right"></i> LANJUTKAN

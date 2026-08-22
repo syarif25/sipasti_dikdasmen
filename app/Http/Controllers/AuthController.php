@@ -17,6 +17,9 @@ class AuthController extends Controller
         $credentials = $request->validate([
             'login' => ['required', 'string'],
             'password' => ['required'],
+        ], [
+            'login.required' => 'Username / Email wajib diisi.',
+            'password.required' => 'Password wajib diisi.',
         ]);
 
         $login_type = filter_var($request->input('login'), FILTER_VALIDATE_EMAIL)
@@ -34,7 +37,7 @@ class AuthController extends Controller
         }
 
         return back()->withErrors([
-            'login' => 'The provided credentials do not match our records.',
+            'login' => 'Username atau password yang Anda masukkan salah.',
         ])->onlyInput('login');
     }
 

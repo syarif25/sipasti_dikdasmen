@@ -24,6 +24,14 @@ class ArsipController extends Controller
 
         $pengajuans = $query->get();
 
+        // Filter for completed/archived documents ONLY
+        $pengajuans = $pengajuans->filter(function($p) {
+            $latestLog = $p->logs->sortByDesc('id_log')->first();
+            if (!$latestLog) return false; // Ignore corrupted data with no logs
+            
+            return in_array($latestLog->status, ['FINAL', 'SELESAI', 'ARSIP', 'DIARSIP']);
+        });
+
         $jenisSurats = JenisSurat::all();
         
         return view('arsip.index', compact('pengajuans', 'jenisSurats'));

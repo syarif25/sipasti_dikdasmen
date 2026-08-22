@@ -20,9 +20,7 @@ class PengajuanController extends Controller
     {
         $query = Pengajuan::with(['lembaga', 'logs' => function($q) {
             $q->latest();
-        }])->whereHas('logs', function($q) {
-            $q->whereNotIn('status', ['FINAL', 'SELESAI', 'ARSIP']);
-        });
+        }]);
 
         // Filter for school level (Level 1)
         if (auth()->user()->level == 1) {
@@ -30,6 +28,21 @@ class PengajuanController extends Controller
         }
 
         $pengajuans = $query->get();
+
+        // Filter out completed/archived documents based on the LATEST log
+        $pengajuans = $pengajuans->filter(function($p) {
+            $latestLog = $p->logs->sortByDesc('id_log')->first();
+            if (!$latestLog) return false;
+            return !in_array($latestLog->status, ['FINAL', 'SELESAI', 'ARSIP']);
+        });
+
+        // For internal structural users (Kasubag, Kabag, KATU, Kabid), ONLY show documents currently at their desk
+        if (in_array(auth()->user()->level, [3, 4, 5, 6])) {
+            $pengajuans = $pengajuans->filter(function($p) {
+                $latestLog = $p->logs->sortByDesc('id_log')->first();
+                return strtolower($latestLog->jabatan) == strtolower(auth()->user()->name);
+            });
+        }
 
         $jenisSurats = JenisSurat::all();
         // Fetch active users for destination dropdown in action modal, sorted by level and name

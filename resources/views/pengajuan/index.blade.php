@@ -170,15 +170,16 @@
               <div class="modal-content">
                  <form action="{{ route('pengajuan.teruskan', $item->id_pengajuan) }}" method="POST" enctype="multipart/form-data">
                   @csrf
-                  <div class="modal-header">
-                    <h5 class="modal-title">
+                  <div class="modal-header bg-primary">
+                    <h5 class="modal-title text-white">
+                      <i class="ti ti-check me-2"></i>
                       @if(Auth::user()->level == 6)
                         ACC Pengajuan
                       @else
                         Lanjutkan Pengajuan
                       @endif
                     </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
                     @php
@@ -187,20 +188,25 @@
                       $isAccKabid = ($latestLog && $latestLog->status == 'ACC KABID');
                     @endphp
 
-                    <div class="bg-light p-3 rounded mb-4 border">
-                      <dl class="row mb-0 text-dark">
-                        <dt class="col-sm-4 fw-normal">Nomor Surat</dt>
-                        <dd class="col-sm-8 fw-bold mb-2">{{ $item->nomor_surat }}</dd>
-                        
-                        <dt class="col-sm-4 fw-normal">Perihal</dt>
-                        <dd class="col-sm-8 fw-bold mb-2">{{ $item->perihal }}</dd>
-                        
-                        <dt class="col-sm-4 fw-normal">Tujuan Surat</dt>
-                        <dd class="col-sm-8 fw-bold mb-2">{{ $item->tujuan }}</dd>
-                        
-                        <dt class="col-sm-4 fw-normal">Pengirim</dt>
-                        <dd class="col-sm-8 fw-bold mb-0">{{ $item->lembaga ? $item->lembaga->nama_lembaga : '-' }}</dd>
-                      </dl>
+                    <div class="border p-3 rounded mb-4">
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <span class="d-block text-muted fs-2">Pengirim</span>
+                          <span class="d-block fw-bold text-dark">{{ $item->lembaga ? $item->lembaga->nama_lembaga : '-' }}</span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <span class="d-block text-muted fs-2">Nomor Surat</span>
+                          <span class="d-block fw-bold text-dark">{{ $item->nomor_surat }}</span>
+                        </div>
+                        <div class="col-md-6 mb-3 mb-md-0">
+                          <span class="d-block text-muted fs-2">Tujuan</span>
+                          <span class="d-block fw-bold text-dark">{{ $item->tujuan }}</span>
+                        </div>
+                        <div class="col-md-6">
+                          <span class="d-block text-muted fs-2">Perihal</span>
+                          <span class="d-block fw-bold text-dark">{{ $item->perihal }}</span>
+                        </div>
+                      </div>
                     </div>
 
                     <div class="mb-3">
@@ -277,25 +283,30 @@
               <div class="modal-content">
                 <form action="{{ route('pengajuan.kembalikan', $item->id_pengajuan) }}" method="POST">
                   @csrf
-                  <div class="modal-header">
-                    <h5 class="modal-title">Kembalikan / Revisi Pengajuan</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  <div class="modal-header bg-danger">
+                    <h5 class="modal-title text-white"><i class="ti ti-arrow-back-up me-2"></i>Kembalikan / Revisi Pengajuan</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <div class="bg-light p-3 rounded mb-4 border">
-                      <dl class="row mb-0 text-dark">
-                        <dt class="col-sm-4 fw-normal">Nomor Surat</dt>
-                        <dd class="col-sm-8 fw-bold mb-2">{{ $item->nomor_surat }}</dd>
-                        
-                        <dt class="col-sm-4 fw-normal">Perihal</dt>
-                        <dd class="col-sm-8 fw-bold mb-2">{{ $item->perihal }}</dd>
-                        
-                        <dt class="col-sm-4 fw-normal">Tujuan Surat</dt>
-                        <dd class="col-sm-8 fw-bold mb-2">{{ $item->tujuan }}</dd>
-                        
-                        <dt class="col-sm-4 fw-normal">Pengirim</dt>
-                        <dd class="col-sm-8 fw-bold mb-0">{{ $item->lembaga ? $item->lembaga->nama_lembaga : '-' }}</dd>
-                      </dl>
+                    <div class="border p-3 rounded mb-4">
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <span class="d-block text-muted fs-2">Pengirim</span>
+                          <span class="d-block fw-bold text-dark">{{ $item->lembaga ? $item->lembaga->nama_lembaga : '-' }}</span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <span class="d-block text-muted fs-2">Nomor Surat</span>
+                          <span class="d-block fw-bold text-dark">{{ $item->nomor_surat }}</span>
+                        </div>
+                        <div class="col-md-6 mb-3 mb-md-0">
+                          <span class="d-block text-muted fs-2">Tujuan</span>
+                          <span class="d-block fw-bold text-dark">{{ $item->tujuan }}</span>
+                        </div>
+                        <div class="col-md-6">
+                          <span class="d-block text-muted fs-2">Perihal</span>
+                          <span class="d-block fw-bold text-dark">{{ $item->perihal }}</span>
+                        </div>
+                      </div>
                     </div>
 
                     <div class="mb-3">

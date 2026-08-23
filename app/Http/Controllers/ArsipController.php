@@ -24,12 +24,12 @@ class ArsipController extends Controller
 
         $pengajuans = $query->get();
 
-        // Filter for completed/archived documents ONLY
+        // Filter out corrupted data (documents with absolutely no logs)
         $pengajuans = $pengajuans->filter(function($p) {
             $latestLog = $p->logs->sortByDesc('id_log')->first();
-            if (!$latestLog) return false; // Ignore corrupted data with no logs
+            if (!$latestLog) return false; 
             
-            return in_array($latestLog->status, ['FINAL', 'SELESAI', 'ARSIP', 'DIARSIP']);
+            return true; // Show ALL documents regardless of status
         });
 
         $jenisSurats = JenisSurat::all();

@@ -264,16 +264,34 @@
                         <small class="text-muted">Wajib diunggah untuk menyatukan berkas sekolah + pengantar Dikdasmen.</small>
                       </div>
                       <div class="mb-3">
-                        <label class="form-label fw-bold">File 2 (Lampiran Baru - Opsional)</label>
-                        <input class="form-control" type="file" name="file2" accept=".pdf">
-                        <small class="text-muted">Opsional. Biarkan kosong jika tidak ingin diubah.</small>
+                        <label class="form-label fw-bold">File 2 (Lampiran)</label>
+                        <div class="d-flex gap-4 mb-2">
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="file2_option_{{ $item->id_pengajuan }}" id="file2_no_change_{{ $item->id_pengajuan }}" value="no_change" checked onchange="document.getElementById('file2_input_container_{{ $item->id_pengajuan }}').style.display='none'">
+                            <label class="form-check-label" for="file2_no_change_{{ $item->id_pengajuan }}">
+                              Tidak ada perubahan
+                            </label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="file2_option_{{ $item->id_pengajuan }}" id="file2_change_{{ $item->id_pengajuan }}" value="change" onchange="document.getElementById('file2_input_container_{{ $item->id_pengajuan }}').style.display='block'">
+                            <label class="form-check-label" for="file2_change_{{ $item->id_pengajuan }}">
+                              Ada perubahan
+                            </label>
+                          </div>
+                        </div>
+                        <div id="file2_input_container_{{ $item->id_pengajuan }}" style="display: none;">
+                          <input class="form-control" type="file" name="file2" accept=".pdf">
+                          <small class="text-muted">Unggah file lampiran baru.</small>
+                        </div>
                       </div>
                     @endif
 
-                    <div class="mb-3">
-                      <label class="form-label">Catatan</label>
-                      <textarea class="form-control" name="catatan" rows="3"></textarea>
-                    </div>
+                    @if(!($userLevel >= 7 && $isAccKabid))
+                      <div class="mb-3">
+                        <label class="form-label">Catatan</label>
+                        <textarea class="form-control" name="catatan" rows="3"></textarea>
+                      </div>
+                    @endif
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>

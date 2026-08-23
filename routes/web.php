@@ -29,6 +29,7 @@ Route::middleware(['auth', 'superadmin'])->prefix('master-data')->name('master.'
 Route::middleware(['auth', 'superadmin'])->group(function () {
     Route::resource('pengguna', \App\Http\Controllers\PenggunaController::class)->except(['create', 'show', 'edit']);
     Route::resource('manajemen-pengajuan', \App\Http\Controllers\ManajemenPengajuanController::class)->except(['create', 'show', 'edit']);
+    Route::resource('manajemen-log', \App\Http\Controllers\ManajemenLogController::class)->except(['create', 'show', 'edit']);
 });
 Route::middleware(['auth'])->group(function () {
     // Pengajuan & Aksi Eskalasi

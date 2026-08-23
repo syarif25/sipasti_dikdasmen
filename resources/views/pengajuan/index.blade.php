@@ -111,7 +111,11 @@
                   @elseif($status == 't' || $status == 'DALAM PROSES' || $status == 'ACC KABID' || $status == 'REVISI')
                     <div class="d-flex flex-column gap-1">
                       <button type="button" class="btn btn-sm btn-warning w-100 mb-1" data-bs-toggle="modal" data-bs-target="#modalTeruskan{{ $item->id_pengajuan }}">
-                        <i class="ti ti-arrow-right"></i> LANJUTKAN
+                        @if(Auth::user()->level == 6)
+                          <i class="ti ti-check"></i> ACC
+                        @else
+                          <i class="ti ti-arrow-right"></i> LANJUTKAN
+                        @endif
                       </button>
                       <button type="button" class="btn btn-sm btn-danger w-100" data-bs-toggle="modal" data-bs-target="#modalKembalikan{{ $item->id_pengajuan }}">
                         <i class="ti ti-arrow-back-up"></i> KEMBALIKAN
@@ -167,7 +171,13 @@
                  <form action="{{ route('pengajuan.teruskan', $item->id_pengajuan) }}" method="POST" enctype="multipart/form-data">
                   @csrf
                   <div class="modal-header">
-                    <h5 class="modal-title">Lanjutkan Pengajuan</h5>
+                    <h5 class="modal-title">
+                      @if(Auth::user()->level == 6)
+                        ACC Pengajuan
+                      @else
+                        Lanjutkan Pengajuan
+                      @endif
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">

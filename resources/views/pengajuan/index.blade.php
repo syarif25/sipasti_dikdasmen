@@ -218,7 +218,7 @@
                       <input type="hidden" name="tujuan_user_id" value="Admin Dikdasmen">
                     @else
                       <div class="mb-3">
-                        <label class="form-label">Tujuan (Jabatan Berikutnya)</label>
+                        <label class="form-label">Tujuan Berikutnya</label>
                         <select class="form-select" name="tujuan_user_id" required>
                           <option value="">-- Pilih Jabatan --</option>
                           @if($userLevel >= 7) {{-- Admin Dikdasmen --}}

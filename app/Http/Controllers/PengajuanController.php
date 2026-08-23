@@ -159,7 +159,7 @@ class PengajuanController extends Controller
     public function teruskan(Request $request, $id)
     {
         $pengajuan = Pengajuan::findOrFail($id);
-        $latestLog = $pengajuan->logs()->latest()->first();
+        $latestLog = $pengajuan->logs()->orderBy('id_log', 'desc')->first();
 
         // Check if Admin (Level 7 or 8) is forwarding a document that has been ACC by Kabid
         $isAdminAndAccKabid = (auth()->user()->level >= 7 && $latestLog && $latestLog->status == 'ACC KABID');
@@ -206,9 +206,15 @@ class PengajuanController extends Controller
             }
         }
 
+        // Determine Posisi
+        $posisiLog = 'DIKDASMEN';
+        if (in_array($namaTujuan, ['BPK2M', 'Bendahara', 'Sekretariat'])) {
+            $posisiLog = $namaTujuan;
+        }
+
         Log::create([
             'id_pengajuan' => $id,
-            'posisi' => 'DIKDASMEN',
+            'posisi' => $posisiLog,
             'jabatan' => $namaTujuan,
             'catatan' => $request->catatan,
             'tanggal_posisi' => now(),

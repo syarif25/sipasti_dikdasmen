@@ -140,7 +140,7 @@ class PengajuanController extends Controller
         ]);
 
         $pengajuan = Pengajuan::findOrFail($id);
-        $latestLog = $pengajuan->logs()->latest()->first();
+        $latestLog = \App\Models\Log::where('id_pengajuan', $id)->orderBy('id_log', 'desc')->first();
 
         Log::create([
             'id_pengajuan' => $id,
@@ -159,7 +159,7 @@ class PengajuanController extends Controller
     public function teruskan(Request $request, $id)
     {
         $pengajuan = Pengajuan::findOrFail($id);
-        $latestLog = $pengajuan->logs()->orderBy('id_log', 'desc')->first();
+        $latestLog = \App\Models\Log::where('id_pengajuan', $id)->orderBy('id_log', 'desc')->first();
 
         // Check if Admin (Level 7 or 8) is forwarding a document that has been ACC by Kabid
         $isAdminAndAccKabid = (auth()->user()->level >= 7 && $latestLog && $latestLog->status == 'ACC KABID');

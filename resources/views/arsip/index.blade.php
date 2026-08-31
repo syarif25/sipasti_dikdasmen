@@ -92,7 +92,12 @@
             <td>{{ \Carbon\Carbon::parse($item->tgl_upload)->format('Y-m-d H:i:s') }}</td>
             <td>
               <div class="d-flex gap-1">
-                <button type="button" class="btn btn-sm btn-info btn-lacak text-white" data-id="{{ $item->id_pengajuan }}">
+                <button type="button" class="btn btn-sm btn-info btn-lacak text-white" 
+                        data-id="{{ $item->id_pengajuan }}"
+                        data-pengirim="{{ $item->lembaga ? $item->lembaga->singkatan_lembaga : '-' }}"
+                        data-nomor="{{ $item->nomor_surat ?? '-' }}"
+                        data-tujuan="{{ $item->tujuan }}"
+                        data-perihal="{{ $item->perihal }}">
                   <i class="ti ti-search"></i> LACAK
                 </button>
                 @if($latestLog && $latestLog->file1)
@@ -122,20 +127,56 @@
 
 <!-- Modal Timeline -->
 <div class="modal fade" id="modalTimeline" tabindex="-1" aria-labelledby="modalTimelineLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalTimelineLabel">Riwayat Perjalanan Dokumen</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-header bg-primary">
+        <h5 class="modal-title text-white" id="modalTimelineLabel"><i class="ti ti-history me-2"></i>Riwayat Pengajuan</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <ul class="timeline-widget mb-0 position-relative mb-n5" id="timelineContent">
-          <div class="text-center py-4" id="timelineLoading">
-            <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">Loading...</span>
+        
+        <div class="border p-3 rounded mb-4">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <span class="d-block text-muted fs-2">Pengirim</span>
+              <span class="d-block fw-bold text-dark" id="lacakPengirim">-</span>
+            </div>
+            <div class="col-md-6 mb-3">
+              <span class="d-block text-muted fs-2">Nomor Surat</span>
+              <span class="d-block fw-bold text-dark" id="lacakNomor">-</span>
+            </div>
+            <div class="col-md-6 mb-3 mb-md-0">
+              <span class="d-block text-muted fs-2">Tujuan</span>
+              <span class="d-block fw-bold text-dark" id="lacakTujuan">-</span>
+            </div>
+            <div class="col-md-6">
+              <span class="d-block text-muted fs-2">Perihal</span>
+              <span class="d-block fw-bold text-dark" id="lacakPerihal">-</span>
             </div>
           </div>
-        </ul>
+        </div>
+
+        <div class="table-responsive border rounded">
+          <table class="table mb-0 align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>TANGGAL</th>
+                <th>POSISI</th>
+                <th>CATATAN</th>
+              </tr>
+            </thead>
+            <tbody id="timelineContent">
+              <!-- Timeline items will be injected here via AJAX -->
+              <tr>
+                <td colspan="3" class="text-center py-4" id="timelineLoading">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -175,7 +216,12 @@
     // Lacak Button AJAX
     $('.btn-lacak').on('click', function() {
         let idPengajuan = $(this).data('id');
-        $('#timelineContent').html('<div class="text-center py-4" id="timelineLoading"><div class="spinner-border text-primary" role="status"></div></div>');
+        $('#lacakPengirim').text($(this).data('pengirim'));
+        $('#lacakNomor').text($(this).data('nomor'));
+        $('#lacakTujuan').text($(this).data('tujuan'));
+        $('#lacakPerihal').text($(this).data('perihal'));
+
+        $('#timelineContent').html('<tr><td colspan="3" class="text-center py-4" id="timelineLoading"><div class="spinner-border text-primary" role="status"></div></td></tr>');
         $('#modalTimeline').modal('show');
 
         fetch(`/pengajuan/${idPengajuan}/timeline`)
@@ -183,36 +229,37 @@
             .then(data => {
                 let html = '';
                 if(data.length === 0) {
-                    html = '<p class="text-center">Tidak ada riwayat.</p>';
+                    html = '<tr><td colspan="3" class="text-center">Tidak ada riwayat.</td></tr>';
                 } else {
                     data.forEach(log => {
-                        let color = 'primary';
-                        if(log.status == 'SELESAI' || log.status == 'FINAL' || log.posisi == 'Diterima') color = 'success';
-                        if(log.status == 'REVISI') color = 'danger';
-
                         let dateObj = new Date(log.tanggal_posisi);
-                        let dateStr = dateObj.toLocaleString('id-ID');
+                        
+                        let day = String(dateObj.getDate()).padStart(2, '0');
+                        let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                        let month = months[dateObj.getMonth()];
+                        let year = dateObj.getFullYear();
+                        
+                        let h = String(dateObj.getHours()).padStart(2, '0');
+                        let m = String(dateObj.getMinutes()).padStart(2, '0');
+                        let s = String(dateObj.getSeconds()).padStart(2, '0');
+                        
+                        let dateStr = `${day} ${month} ${year}, ${h}:${m}:${s}`;
+                        
+                        let catatan = log.catatan ? log.catatan : '-';
 
                         html += `
-                        <li class="timeline-item d-flex position-relative overflow-hidden">
-                          <div class="timeline-time text-dark flex-shrink-0 text-end">${dateStr}</div>
-                          <div class="timeline-badge-wrap d-flex flex-column align-items-center">
-                            <span class="timeline-badge border-2 border border-${color} flex-shrink-0 my-8"></span>
-                            <span class="timeline-badge-border d-block flex-shrink-0"></span>
-                          </div>
-                          <div class="timeline-desc fs-3 text-dark mt-n1 fw-semibold">
-                            ${log.posisi} (${log.jabatan})
-                            <div class="fw-normal text-muted mt-1">${log.catatan ? log.catatan : ''}</div>
-                            <span class="badge bg-${color} mt-2">${log.status}</span>
-                          </div>
-                        </li>
+                        <tr>
+                          <td style="white-space: nowrap;">${dateStr}</td>
+                          <td>Surat berada di <strong>${log.posisi} (${log.jabatan})</strong></td>
+                          <td>${catatan}</td>
+                        </tr>
                         `;
                     });
                 }
                 $('#timelineContent').html(html);
             })
             .catch(error => {
-                $('#timelineContent').html('<p class="text-danger text-center">Gagal memuat riwayat.</p>');
+                $('#timelineContent').html('<tr><td colspan="3" class="text-danger text-center">Gagal memuat riwayat.</td></tr>');
             });
     });
   });

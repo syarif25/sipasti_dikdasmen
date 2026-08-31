@@ -393,13 +393,12 @@
                 <th>TANGGAL</th>
                 <th>POSISI</th>
                 <th>CATATAN</th>
-                <th>STATUS</th>
               </tr>
             </thead>
             <tbody id="timelineContent">
               <!-- Timeline items will be injected here via AJAX -->
               <tr>
-                <td colspan="4" class="text-center py-4" id="timelineLoading">
+                <td colspan="3" class="text-center py-4" id="timelineLoading">
                   <div class="spinner-border text-primary" role="status">
                     <span class="visually-hidden">Loading...</span>
                   </div>
@@ -452,7 +451,7 @@
         $('#lacakTujuan').text($(this).data('tujuan'));
         $('#lacakPerihal').text($(this).data('perihal'));
 
-        $('#timelineContent').html('<tr><td colspan="4" class="text-center py-4" id="timelineLoading"><div class="spinner-border text-primary" role="status"></div></td></tr>');
+        $('#timelineContent').html('<tr><td colspan="3" class="text-center py-4" id="timelineLoading"><div class="spinner-border text-primary" role="status"></div></td></tr>');
         $('#modalTimeline').modal('show');
 
         fetch(`/pengajuan/${idPengajuan}/timeline`)
@@ -460,7 +459,7 @@
             .then(data => {
                 let html = '';
                 if(data.length === 0) {
-                    html = '<tr><td colspan="4" class="text-center">Tidak ada riwayat.</td></tr>';
+                    html = '<tr><td colspan="3" class="text-center">Tidak ada riwayat.</td></tr>';
                 } else {
                     data.forEach(log => {
                         let color = 'primary';
@@ -468,7 +467,17 @@
                         if(log.status == 'REVISI') color = 'danger';
 
                         let dateObj = new Date(log.tanggal_posisi);
-                        let dateStr = dateObj.toLocaleString('id-ID');
+                        
+                        let day = String(dateObj.getDate()).padStart(2, '0');
+                        let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                        let month = months[dateObj.getMonth()];
+                        let year = dateObj.getFullYear();
+                        
+                        let h = String(dateObj.getHours()).padStart(2, '0');
+                        let m = String(dateObj.getMinutes()).padStart(2, '0');
+                        let s = String(dateObj.getSeconds()).padStart(2, '0');
+                        
+                        let dateStr = `${day} ${month} ${year}, ${h}:${m}:${s}`;
                         
                         let catatan = log.catatan ? log.catatan : '-';
 
@@ -477,7 +486,6 @@
                           <td style="white-space: nowrap;">${dateStr}</td>
                           <td>Surat berada di <strong>${log.posisi} (${log.jabatan})</strong></td>
                           <td>${catatan}</td>
-                          <td><span class="badge bg-${color}">${log.status}</span></td>
                         </tr>
                         `;
                     });
@@ -485,7 +493,7 @@
                 $('#timelineContent').html(html);
             })
             .catch(error => {
-                $('#timelineContent').html('<tr><td colspan="4" class="text-danger text-center">Gagal memuat riwayat.</td></tr>');
+                $('#timelineContent').html('<tr><td colspan="3" class="text-danger text-center">Gagal memuat riwayat.</td></tr>');
             });
     });
   });

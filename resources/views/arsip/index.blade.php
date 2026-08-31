@@ -81,12 +81,12 @@
               <div class="fw-semibold text-muted">({{ $jabatanPosisi }})</div>
             </td>
             <td>
-              @if($status == 'SELESAI' || $status == 'FINAL' || $status == 'DIARSIP')
-                <span class="badge bg-success text-white"><i class="ti ti-check"></i> DIARSIP</span>
+              @if($status == 'SELESAI' || $status == 'FINAL' || $status == 'DIARSIP' || $status == 'ACC KABID')
+                <span class="badge bg-success text-white"><i class="ti ti-check"></i> {{ $status }}</span>
               @elseif($status == 'REVISI')
                 <span class="badge bg-danger text-white"><i class="ti ti-alert-triangle"></i> REVISI</span>
               @else
-                <span class="badge bg-warning text-dark"><i class="ti ti-loader"></i> DALAM PROSES</span>
+                <span class="badge bg-warning text-dark"><i class="ti ti-loader"></i> {{ $status }}</span>
               @endif
             </td>
             <td>{{ \Carbon\Carbon::parse($item->tgl_upload)->format('Y-m-d H:i:s') }}</td>

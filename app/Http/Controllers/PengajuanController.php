@@ -20,7 +20,7 @@ class PengajuanController extends Controller
     {
         $query = Pengajuan::with(['lembaga', 'logs' => function($q) {
             $q->latest();
-        }]);
+        }])->orderBy('created_at', 'desc');
 
         // Filter for school level (Level 1)
         if (auth()->user()->level == 1) {

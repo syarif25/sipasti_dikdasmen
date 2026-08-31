@@ -117,10 +117,6 @@
         </div>
         <div class="modal-body">
           <div class="mb-3">
-            <label class="form-label">ID Lembaga</label>
-            <input type="text" class="form-control" name="id_lembaga" required maxlength="10">
-          </div>
-          <div class="mb-3">
             <label class="form-label">Nama Lembaga</label>
             <input type="text" class="form-control" name="nama_lembaga" required maxlength="50">
           </div>

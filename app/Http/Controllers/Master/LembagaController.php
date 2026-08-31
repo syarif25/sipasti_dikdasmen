@@ -19,12 +19,23 @@ class LembagaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_lembaga' => 'required|string|max:10|unique:lembagas',
             'nama_lembaga' => 'required|string|max:50',
             'singkatan_lembaga' => 'required|string|max:15',
         ]);
 
-        \App\Models\Lembaga::create($request->all());
+        $lastLembaga = \App\Models\Lembaga::orderBy('id_lembaga', 'desc')->first();
+        $nextIdNumber = 1;
+        if ($lastLembaga) {
+            $lastIdStr = substr($lastLembaga->id_lembaga, 3);
+            $nextIdNumber = intval($lastIdStr) + 1;
+        }
+        $newIdLembaga = 'LMB' . str_pad($nextIdNumber, 3, '0', STR_PAD_LEFT);
+
+        \App\Models\Lembaga::create([
+            'id_lembaga' => $newIdLembaga,
+            'nama_lembaga' => $request->nama_lembaga,
+            'singkatan_lembaga' => $request->singkatan_lembaga,
+        ]);
 
         return redirect()->route('master.lembaga.index')->with('success', 'Data Lembaga berhasil ditambahkan.');
     }

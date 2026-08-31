@@ -189,8 +189,6 @@ class PengajuanController extends Controller
         $status = 'DALAM PROSES';
         if (auth()->user()->level == 6) {
             $status = 'ACC KABID';
-        } elseif ($isAdminAndAccKabid) {
-            $status = 'SELESAI';
         }
 
         // Handle file uploads

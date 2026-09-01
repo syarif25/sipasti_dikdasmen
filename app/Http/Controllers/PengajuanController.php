@@ -47,7 +47,7 @@ class PengajuanController extends Controller
         $jenisSurats = JenisSurat::all();
         // Fetch active users for destination dropdown in action modal, sorted by level and name
         $usersEselon = User::with('jabatan')
-            ->whereIn('level', [3, 4, 5, 6])
+            ->whereIn('level', [3, 4, 5, 6, 7])
             ->where('status', 1)
             ->orderBy('level', 'asc')
             ->orderBy('name', 'asc')
@@ -187,7 +187,7 @@ class PengajuanController extends Controller
 
         // Set status
         $status = 'DALAM PROSES';
-        if (auth()->user()->level == 6) {
+        if (auth()->user()->level == 6 && strtolower(trim($namaTujuan)) == 'admin dikdasmen') {
             $status = 'ACC KABID';
         }
 

@@ -214,9 +214,6 @@
                       </div>
                     </div>
 
-                    @if($userLevel == 6)
-                      <input type="hidden" name="tujuan_user_id" value="Admin Dikdasmen">
-                    @else
                       <div class="mb-3">
                         <label class="form-label">Tujuan Berikutnya</label>
                         <select class="form-select" name="tujuan_user_id" required>
@@ -228,25 +225,33 @@
                               <option value="Sekretariat">Sekretariat</option>
                             @else
                               @php
-                                // Admin Dikdasmen bisa meneruskan ke Kasubag(3), Kabag(4), KATU(5)
-                                $targetUsers = $usersEselon->filter(fn($u) => in_array($u->level, [3, 4, 5]));
+                                $targetUsers = $usersEselon->filter(fn($u) => $u->level == 6);
                               @endphp
                               @foreach($targetUsers as $userTarget)
                                 <option value="{{ $userTarget->id_user }}">{{ $userTarget->name }}</option>
                               @endforeach
                             @endif
+                          @elseif($userLevel == 6) {{-- Kabid --}}
+                            @php
+                                $targetUsers = $usersEselon->filter(fn($u) => in_array($u->level, [4, 5, 7]));
+                            @endphp
+                            @foreach($targetUsers as $userTarget)
+                                <option value="{{ $userTarget->id_user }}">{{ $userTarget->name }}</option>
+                            @endforeach
                           @elseif($userLevel == 5) {{-- KATU --}}
-                            @php $targetUsers = $usersEselon->filter(fn($u) => $u->level == 6); @endphp
+                            @php
+                                $targetUsers = $usersEselon->filter(fn($u) => in_array($u->level, [3, 6]));
+                            @endphp
                             @foreach($targetUsers as $userTarget)
                               <option value="{{ $userTarget->id_user }}">{{ $userTarget->name }}</option>
                             @endforeach
                           @elseif($userLevel == 4) {{-- Kabag --}}
-                            @php $targetUsers = $usersEselon->filter(fn($u) => $u->level == 5); @endphp
+                            @php $targetUsers = $usersEselon->filter(fn($u) => $u->level == 3); @endphp
                             @foreach($targetUsers as $userTarget)
                               <option value="{{ $userTarget->id_user }}">{{ $userTarget->name }}</option>
                             @endforeach
                           @elseif($userLevel == 3) {{-- Kasubag --}}
-                            @php $targetUsers = $usersEselon->filter(fn($u) => $u->level == 4); @endphp
+                            @php $targetUsers = $usersEselon->filter(fn($u) => $u->level == 5); @endphp
                             @foreach($targetUsers as $userTarget)
                               <option value="{{ $userTarget->id_user }}">{{ $userTarget->name }}</option>
                             @endforeach
@@ -255,7 +260,6 @@
                           @endif
                         </select>
                       </div>
-                    @endif
 
                     @if($userLevel >= 7 && $isAccKabid)
                       <div class="mb-3">

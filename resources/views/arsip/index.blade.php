@@ -89,7 +89,7 @@
                 <span class="badge bg-warning text-dark"><i class="ti ti-loader"></i> {{ $status }}</span>
               @endif
             </td>
-            <td>{{ \Carbon\Carbon::parse($item->tgl_upload)->format('Y-m-d H:i:s') }}</td>
+            <td>{{ $latestLog ? \Carbon\Carbon::parse($latestLog->tanggal_posisi)->format('Y-m-d H:i:s') : '-' }}</td>
             <td>
               <div class="d-flex gap-1">
                 <button type="button" class="btn btn-sm btn-info btn-lacak text-white" 

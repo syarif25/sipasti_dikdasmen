@@ -85,7 +85,7 @@
               <div class="fw-bold">{{ $posisi }}</div>
               <div class="fw-semibold text-muted">({{ $jabatanPosisi }})</div>
             </td>
-            <td>{{ \Carbon\Carbon::parse($item->tgl_upload)->format('d-m-Y H:i:s') }}</td>
+            <td>{{ $latestLog ? \Carbon\Carbon::parse($latestLog->tanggal_posisi)->format('d-m-Y H:i:s') : '-' }}</td>
             <td>
               @if(Auth::user()->level >= 2)
                 @php

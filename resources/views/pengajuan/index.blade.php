@@ -111,7 +111,7 @@
                   @elseif($status == 't' || $status == 'DALAM PROSES' || $status == 'ACC KABID' || $status == 'REVISI')
                     <div class="d-flex flex-column gap-1">
                       <button type="button" class="btn btn-sm btn-primary w-100 mb-1" data-bs-toggle="modal" data-bs-target="#modalTeruskan{{ $item->id_pengajuan }}">
-                        <i class="ti ti-arrow-right"></i> PROSES / TERUSKAN
+                        <i class="ti ti-arrow-right"></i> LANJUTKAN
                       </button>
                       <button type="button" class="btn btn-sm btn-danger w-100" data-bs-toggle="modal" data-bs-target="#modalKembalikan{{ $item->id_pengajuan }}">
                         <i class="ti ti-arrow-back-up"></i> KEMBALIKAN

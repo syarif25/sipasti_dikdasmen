@@ -146,7 +146,7 @@ class PengajuanController extends Controller
             'id_pengajuan' => $id,
             'posisi' => $latestLog ? $latestLog->posisi : 'DIKDASMEN',
             'jabatan' => $latestLog ? $latestLog->jabatan : 'administrator',
-            'catatan' => $request->catatan ?: 'Surat telah diterima oleh Admin.',
+            'catatan' => $request->catatan,
             'tanggal_posisi' => now(),
             'file1' => $latestLog ? $latestLog->file1 : null,
             'file2' => $latestLog ? $latestLog->file2 : null,
@@ -244,7 +244,7 @@ class PengajuanController extends Controller
 
     public function timeline($id)
     {
-        $logs = Log::where('id_pengajuan', $id)->orderBy('created_at', 'desc')->get();
+        $logs = Log::where('id_pengajuan', $id)->orderBy('created_at', 'asc')->get();
         return response()->json($logs);
     }
 }

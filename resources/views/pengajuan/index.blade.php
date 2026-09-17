@@ -236,13 +236,15 @@
                             @endforeach
                           @elseif($userLevel == 5) {{-- KATU --}}
                             @php
-                                $targetUsers = $usersEselon->filter(fn($u) => in_array($u->level, [3, 6]));
+                                $targetUsers = $usersEselon->filter(fn($u) => in_array($u->level, [3, 4, 6]));
                             @endphp
                             @foreach($targetUsers as $userTarget)
                               <option value="{{ $userTarget->id_user }}">{{ $userTarget->name }}</option>
                             @endforeach
                           @elseif($userLevel == 4) {{-- Kabag --}}
-                            @php $targetUsers = $usersEselon->filter(fn($u) => $u->level == 3); @endphp
+                            @php 
+                                $targetUsers = $usersEselon->filter(fn($u) => in_array($u->level, [3, 4, 5, 6])); 
+                            @endphp
                             @foreach($targetUsers as $userTarget)
                               <option value="{{ $userTarget->id_user }}">{{ $userTarget->name }}</option>
                             @endforeach

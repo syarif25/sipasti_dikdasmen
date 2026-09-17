@@ -49,7 +49,7 @@ class PengajuanController extends Controller
         $usersEselon = User::with('jabatan')
             ->whereIn('level', [3, 4, 5, 6, 7])
             ->where('status', 1)
-            ->orderBy('level', 'asc')
+            ->orderBy('level', 'desc')
             ->orderBy('name', 'asc')
             ->get();
         

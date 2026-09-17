@@ -123,7 +123,7 @@ class PengajuanController extends Controller
             'id_pengajuan' => $idPengajuan,
             'posisi' => 'DIKDASMEN',
             'jabatan' => 'administrator',
-            'catatan' => 'Pengajuan awal diunggah.',
+            'catatan' => null,
             'tanggal_posisi' => now(),
             'file1' => $file1Path,
             'file2' => $file2Path,

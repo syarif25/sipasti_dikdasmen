@@ -229,7 +229,12 @@
                             @endif
                           @elseif($userLevel == 6) {{-- Kabid --}}
                             @php
-                                $targetUsers = $usersEselon->filter(fn($u) => in_array($u->level, [4, 5, 7]));
+                                $hasProcessedDown = $item->logs->contains(function($log) use ($usersEselon) {
+                                    $logUser = $usersEselon->first(fn($u) => strtolower($u->name) == strtolower($log->jabatan));
+                                    return $logUser && in_array($logUser->level, [3, 4, 5]);
+                                });
+                                $allowedLevels = $hasProcessedDown ? [7] : [4, 5, 7];
+                                $targetUsers = $usersEselon->filter(fn($u) => in_array($u->level, $allowedLevels));
                             @endphp
                             @foreach($targetUsers as $userTarget)
                                 <option value="{{ $userTarget->id_user }}">{{ $userTarget->name }}</option>

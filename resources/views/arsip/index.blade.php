@@ -250,7 +250,7 @@
                         html += `
                         <tr>
                           <td style="white-space: nowrap;">${dateStr}</td>
-                          <td>Surat berada di <strong>${log.posisi} (${log.jabatan})</strong></td>
+                          <td>surat dilanjutkan ke <strong>${log.posisi} (${log.jabatan})</strong></td>
                           <td>${catatan}</td>
                         </tr>
                         `;

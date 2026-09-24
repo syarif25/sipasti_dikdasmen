@@ -33,6 +33,11 @@ class PengajuanController extends Controller
         $pengajuans = $pengajuans->filter(function($p) {
             $latestLog = $p->logs->sortByDesc('id_log')->first();
             if (!$latestLog) return false;
+
+            if (auth()->user()->level >= 3 && auth()->user()->level <= 7 && $latestLog->status == 'REVISI') {
+                return false;
+            }
+
             return !in_array($latestLog->status, ['FINAL', 'SELESAI', 'ARSIP']);
         });
 

@@ -322,12 +322,10 @@
                       </div>
                     @endif
 
-                    @if(!($userLevel >= 7 && $isAccKabid))
                       <div class="mb-3">
                         <label class="form-label">Catatan</label>
-                        <textarea class="form-control" name="catatan" rows="3"></textarea>
+                        <textarea class="form-control" name="catatan" rows="3" required placeholder="Tulis instruksi/catatan..."></textarea>
                       </div>
-                    @endif
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>

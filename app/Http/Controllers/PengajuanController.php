@@ -166,7 +166,7 @@ class PengajuanController extends Controller
 
         $rules = [
             'tujuan_user_id' => 'required|string',
-            'catatan' => 'nullable|string',
+            'catatan' => 'required|string',
         ];
 
         if ($isAdminAndAccKabid) {

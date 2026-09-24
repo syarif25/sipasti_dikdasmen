@@ -95,7 +95,7 @@
           <div class="modal fade" id="modalEdit{{ $log->id_log }}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
-                <form action="{{ route('manajemen-log.update', $log->id_log) }}" method="POST">
+                <form action="{{ route('manajemen-log.update', $log->id_log) }}" method="POST" enctype="multipart/form-data">
                   @csrf
                   @method('PUT')
                   <div class="modal-header">
@@ -128,6 +128,20 @@
                     <div class="mb-3">
                       <label class="form-label">Catatan</label>
                       <textarea class="form-control" name="catatan" rows="3">{{ $log->catatan }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label">File 1 (Opsional, PDF)</label>
+                      <input type="file" class="form-control" name="file1" accept=".pdf">
+                      @if($log->file1)
+                        <small class="text-muted">Biarkan kosong jika tidak ingin mengubah file saat ini.</small>
+                      @endif
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label">File 2 (Opsional, PDF)</label>
+                      <input type="file" class="form-control" name="file2" accept=".pdf">
+                      @if($log->file2)
+                        <small class="text-muted">Biarkan kosong jika tidak ingin mengubah file saat ini.</small>
+                      @endif
                     </div>
                     <div class="mb-3">
                       <label class="form-label">Tanggal Posisi</label>
@@ -177,7 +191,7 @@
 <div class="modal fade" id="modalTambah" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="{{ route('manajemen-log.store') }}" method="POST">
+      <form action="{{ route('manajemen-log.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="modal-header">
           <h5 class="modal-title">Tambah Log Manual</h5>
@@ -210,6 +224,14 @@
           <div class="mb-3">
             <label class="form-label">Catatan</label>
             <textarea class="form-control" name="catatan" rows="3"></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">File 1 (Opsional, PDF)</label>
+            <input type="file" class="form-control" name="file1" accept=".pdf">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">File 2 (Opsional, PDF)</label>
+            <input type="file" class="form-control" name="file2" accept=".pdf">
           </div>
           <div class="mb-3">
             <label class="form-label">Tanggal Posisi</label>

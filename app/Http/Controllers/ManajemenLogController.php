@@ -32,9 +32,20 @@ class ManajemenLogController extends Controller
             'status' => 'required|string|max:255',
             'tanggal_posisi' => 'required|date',
             'catatan' => 'nullable|string',
+            'file1' => 'nullable|mimes:pdf|max:10240',
+            'file2' => 'nullable|mimes:pdf|max:10240',
         ]);
 
-        Log::create($request->all());
+        $data = $request->except(['file1', 'file2']);
+
+        if ($request->hasFile('file1')) {
+            $data['file1'] = $request->file('file1')->store('pengajuan', 'public');
+        }
+        if ($request->hasFile('file2')) {
+            $data['file2'] = $request->file('file2')->store('pengajuan', 'public');
+        }
+
+        Log::create($data);
 
         return redirect()->route('manajemen-log.index')->with('success', 'Log berhasil ditambahkan.');
     }
@@ -51,10 +62,21 @@ class ManajemenLogController extends Controller
             'status' => 'required|string|max:255',
             'tanggal_posisi' => 'required|date',
             'catatan' => 'nullable|string',
+            'file1' => 'nullable|mimes:pdf|max:10240',
+            'file2' => 'nullable|mimes:pdf|max:10240',
         ]);
 
         $log = Log::findOrFail($id);
-        $log->update($request->all());
+        $data = $request->except(['file1', 'file2']);
+
+        if ($request->hasFile('file1')) {
+            $data['file1'] = $request->file('file1')->store('pengajuan', 'public');
+        }
+        if ($request->hasFile('file2')) {
+            $data['file2'] = $request->file('file2')->store('pengajuan', 'public');
+        }
+
+        $log->update($data);
 
         return redirect()->route('manajemen-log.index')->with('success', 'Log berhasil diperbarui.');
     }

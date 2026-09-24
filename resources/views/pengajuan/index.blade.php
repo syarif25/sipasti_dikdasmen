@@ -229,10 +229,20 @@
                             @endif
                           @elseif($userLevel == 6) {{-- Kabid --}}
                             @php
-                                $hasProcessedDown = $item->logs->contains(function($log) use ($usersEselon) {
+                                $logsDesc = $item->logs->sortByDesc('id_log');
+                                $hasProcessedDown = false;
+                                foreach($logsDesc as $log) {
                                     $logUser = $usersEselon->first(fn($u) => strtolower($u->name) == strtolower($log->jabatan));
-                                    return $logUser && in_array($logUser->level, [3, 4, 5]);
-                                });
+                                    if ($logUser) {
+                                        if ($logUser->level >= 7) {
+                                            break; // Found Staf/Admin Dikdasmen first, meaning it just started a new cycle
+                                        }
+                                        if (in_array($logUser->level, [3, 4, 5])) {
+                                            $hasProcessedDown = true;
+                                            break; // Found KATU/Kabag/Kasubag before Staf, meaning it has processed down
+                                        }
+                                    }
+                                }
                                 $allowedLevels = $hasProcessedDown ? [7] : [4, 5, 7];
                                 $targetUsers = $usersEselon->filter(fn($u) => in_array($u->level, $allowedLevels));
                             @endphp

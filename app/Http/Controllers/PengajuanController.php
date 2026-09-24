@@ -47,6 +47,18 @@ class PengajuanController extends Controller
                 $latestLog = $p->logs->sortByDesc('id_log')->first();
                 return strtolower($latestLog->jabatan) == strtolower(auth()->user()->name);
             });
+        } elseif (auth()->user()->level >= 7) {
+            // Admin Dikdasmen only sees documents currently at DIKDASMEN
+            $pengajuans = $pengajuans->filter(function($p) {
+                $latestLog = $p->logs->sortByDesc('id_log')->first();
+                return strtolower($latestLog->posisi) == 'dikdasmen';
+            });
+        } elseif (auth()->user()->level == 2) {
+            // Other Admins (e.g., BPK2M, Bendahara) only see documents currently at their institution
+            $pengajuans = $pengajuans->filter(function($p) {
+                $latestLog = $p->logs->sortByDesc('id_log')->first();
+                return strtolower($latestLog->posisi) == strtolower(auth()->user()->name) || strtolower($latestLog->jabatan) == strtolower(auth()->user()->name);
+            });
         }
 
         $jenisSurats = JenisSurat::all();

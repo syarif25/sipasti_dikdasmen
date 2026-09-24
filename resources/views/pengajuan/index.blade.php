@@ -299,7 +299,6 @@
                       <div class="mb-3">
                         <label class="form-label text-danger fw-bold">File 1 (Pengantar Baru) *</label>
                         <input class="form-control" type="file" name="file1" accept=".pdf" required>
-                        <small class="text-muted">Wajib diunggah untuk menyatukan berkas sekolah + pengantar Dikdasmen.</small>
                       </div>
                       <div class="mb-3">
                         <label class="form-label fw-bold">File 2 (Lampiran)</label>
@@ -461,7 +460,7 @@
       "language": {
         "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json"
       },
-      "ordering": false, // custom column sorting if needed
+      "ordering": true, // Enable column sorting
       "responsive": true
     });
 

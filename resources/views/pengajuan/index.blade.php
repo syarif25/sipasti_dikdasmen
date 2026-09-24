@@ -397,6 +397,27 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
+                    <div class="border p-3 rounded mb-4">
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <span class="d-block text-muted fs-2">Pengirim</span>
+                          <span class="d-block fw-bold text-dark">{{ $item->lembaga ? $item->lembaga->nama_lembaga : '-' }}</span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <span class="d-block text-muted fs-2">Nomor Surat</span>
+                          <span class="d-block fw-bold text-dark">{{ $item->nomor_surat }}</span>
+                        </div>
+                        <div class="col-md-6 mb-3 mb-md-0">
+                          <span class="d-block text-muted fs-2">Tujuan</span>
+                          <span class="d-block fw-bold text-dark">{{ $item->tujuan }}</span>
+                        </div>
+                        <div class="col-md-6">
+                          <span class="d-block text-muted fs-2">Perihal</span>
+                          <span class="d-block fw-bold text-dark">{{ $item->perihal }}</span>
+                        </div>
+                      </div>
+                    </div>
+
                     <div class="alert alert-danger mb-4">
                       <strong>Catatan Revisi:</strong><br>
                       {{ $latestLog && $latestLog->catatan ? $latestLog->catatan : 'Tidak ada catatan.' }}

@@ -52,8 +52,7 @@
       </div>
     </div>
 
-    <div class="table-responsive">
-      <table id="dataTable" class="table align-middle border table-striped table-bordered">
+      <table id="dataTable" class="table align-middle border table-striped table-bordered dt-responsive nowrap" style="width:100%">
         <thead class="text-dark fs-3">
           <tr>
             <th><h6 class="fw-semibold mb-0 text-uppercase fs-2">No.</h6></th>
@@ -388,7 +387,6 @@
           @endforeach
         </tbody>
       </table>
-    </div>
   </div>
 </div>
 
@@ -463,7 +461,8 @@
       "language": {
         "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json"
       },
-      "ordering": false // custom column sorting if needed
+      "ordering": false, // custom column sorting if needed
+      "responsive": true
     });
 
     // Custom Filters

@@ -73,6 +73,10 @@
             $posisi = $latestLog ? $latestLog->posisi : '-';
             $jabatanPosisi = $latestLog ? $latestLog->jabatan : '-';
             $status = $latestLog ? $latestLog->status : 'DALAM PROSES';
+            $file1Log = $item->logs->whereNotNull('file1')->sortByDesc('id_log')->first();
+            $file2Log = $item->logs->whereNotNull('file2')->sortByDesc('id_log')->first();
+            $currentFile1 = $file1Log ? $file1Log->file1 : null;
+            $currentFile2 = $file2Log ? $file2Log->file2 : null;
           @endphp
           <tr>
             <td>{{ $loop->iteration }}</td>
@@ -168,16 +172,16 @@
                   <i class="ti ti-search"></i> LACAK
                 </button>
                 <div class="d-flex gap-1">
-                  @if($latestLog && $latestLog->file1)
-                    <a href="{{ Storage::url($latestLog->file1) }}" target="_blank" class="btn btn-sm btn-outline-primary flex-fill">
+                  @if($currentFile1)
+                    <a href="{{ Storage::url($currentFile1) }}" target="_blank" class="btn btn-sm btn-outline-primary flex-fill">
                       <i class="ti ti-file-description"></i> FILE 1
                     </a>
                   @else
                     <button class="btn btn-sm btn-outline-secondary flex-fill" disabled><i class="ti ti-file-description"></i> FILE 1</button>
                   @endif
                   
-                  @if($latestLog && $latestLog->file2)
-                    <a href="{{ Storage::url($latestLog->file2) }}" target="_blank" class="btn btn-sm btn-outline-primary flex-fill">
+                  @if($currentFile2)
+                    <a href="{{ Storage::url($currentFile2) }}" target="_blank" class="btn btn-sm btn-outline-primary flex-fill">
                       <i class="ti ti-file-description"></i> FILE 2
                     </a>
                   @else
@@ -447,7 +451,7 @@
                       </div>
                       <div id="revisi_file2_input_container_{{ $item->id_pengajuan }}" style="display: none;">
                         <input class="form-control" type="file" name="file2" accept=".pdf">
-                        <small class="text-muted">Unggah file lampiran revisi (Opsional, Format PDF max 10MB).</small>
+                        <small class="text-muted">Unggah file lampiran revisi Format PDF max 10MB.</small>
                       </div>
                     </div>
 

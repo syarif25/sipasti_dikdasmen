@@ -272,6 +272,10 @@ class PengajuanController extends Controller
             'catatan' => 'nullable|string',
         ]);
 
+        $latestLog = \App\Models\Log::where('id_pengajuan', $id)->orderBy('id_log', 'desc')->first();
+        $file1Path = $latestLog ? $latestLog->file1 : null;
+        $file2Path = $latestLog ? $latestLog->file2 : null;
+
         if (auth()->user()->level == 6) {
             Log::create([
                 'id_pengajuan' => $id,
@@ -279,6 +283,8 @@ class PengajuanController extends Controller
                 'jabatan' => 'administrator',
                 'catatan' => $request->catatan,
                 'tanggal_posisi' => now(),
+                'file1' => $file1Path,
+                'file2' => $file2Path,
                 'status' => 'KEMBALIKAN KE STAF',
             ]);
             return redirect()->back()->with('success', 'Dokumen dikembalikan ke Staf untuk direvisi ke lembaga.');
@@ -290,6 +296,8 @@ class PengajuanController extends Controller
             'jabatan' => 'Sekolah/Lembaga',
             'catatan' => $request->catatan,
             'tanggal_posisi' => now(),
+            'file1' => $file1Path,
+            'file2' => $file2Path,
             'status' => 'REVISI',
         ]);
 

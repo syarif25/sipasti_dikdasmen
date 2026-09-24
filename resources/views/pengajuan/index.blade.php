@@ -150,7 +150,7 @@
                   <span class="badge bg-warning">sedang proses</span>
                 @elseif($status == 'REVISI')
                   <button type="button" class="btn btn-sm btn-danger w-100" data-bs-toggle="modal" data-bs-target="#modalRevisi{{ $item->id_pengajuan }}">
-                    Revisi
+                    <i class="ti ti-edit"></i> REVISI
                   </button>
                 @else
                   <span class="badge bg-secondary">{{ strtolower($status) }}</span>

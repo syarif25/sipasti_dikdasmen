@@ -181,6 +181,7 @@
         </div>
       </div>
       <div class="modal-footer">
+        <button type="button" class="btn btn-outline-primary" onclick="printTimeline()"><i class="ti ti-printer"></i> Cetak</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
       </div>
     </div>
@@ -277,5 +278,24 @@
             });
     });
   });
+
+  function printTimeline() {
+    let printContents = document.querySelector('#modalTimeline .modal-body').innerHTML;
+    let printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write('<html><head><title>Cetak Riwayat Pengajuan</title>');
+    printWindow.document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">');
+    printWindow.document.write('<style>body{padding: 20px;} .table{width: 100%; margin-bottom: 1rem; color: #212529; border-collapse: collapse;} .table th, .table td{padding: 0.75rem; vertical-align: top; border-top: 1px solid #dee2e6;} .table thead th{vertical-align: bottom; border-bottom: 2px solid #dee2e6; text-align: left;}</style>');
+    printWindow.document.write('</head><body>');
+    printWindow.document.write('<h4 style="margin-bottom: 20px;">Riwayat Pengajuan Surat</h4>');
+    printWindow.document.write(printContents);
+    printWindow.document.write('</body></html>');
+    
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(function() {
+        printWindow.print();
+        printWindow.close();
+    }, 800);
+  }
 </script>
 @endpush

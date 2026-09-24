@@ -132,9 +132,11 @@
                           <i class="ti ti-arrow-right"></i> LANJUTKAN
                         @endif
                       </button>
-                      <button type="button" class="btn btn-sm btn-danger w-100" data-bs-toggle="modal" data-bs-target="#modalKembalikan{{ $item->id_pengajuan }}">
-                        <i class="ti ti-arrow-back-up"></i> KEMBALIKAN
-                      </button>
+                      @if($status != 'ACC KABID')
+                        <button type="button" class="btn btn-sm btn-danger w-100" data-bs-toggle="modal" data-bs-target="#modalKembalikan{{ $item->id_pengajuan }}">
+                          <i class="ti ti-arrow-back-up"></i> KEMBALIKAN
+                        </button>
+                      @endif
                     </div>
                   @else
                     <span class="badge bg-secondary">{{ $status }}</span>
@@ -512,13 +514,16 @@
                         let s = String(dateObj.getSeconds()).padStart(2, '0');
                         
                         let dateStr = `${day} ${month} ${year}, ${h}:${m}:${s}`;
-                        
                         let catatan = log.catatan ? log.catatan : '-';
+                        let descHtml = `surat dilanjutkan ke <strong>${log.posisi} (${log.jabatan})</strong>`;
+                        if (log.status == 'ACC KABID') {
+                            descHtml = `<strong>surat telah ditandatangani kabid dikdasmen</strong>`;
+                        }
 
                         html += `
                         <tr>
                           <td style="white-space: nowrap;">${dateStr}</td>
-                          <td>surat dilanjutkan ke <strong>${log.posisi} (${log.jabatan})</strong></td>
+                          <td>${descHtml}</td>
                           <td>${catatan}</td>
                         </tr>
                         `;

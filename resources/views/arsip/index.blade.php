@@ -245,11 +245,15 @@
                         let dateStr = `${day} ${month} ${year}, ${h}:${m}:${s}`;
                         
                         let catatan = log.catatan ? log.catatan : '-';
+                        let descHtml = `surat dilanjutkan ke <strong>${log.posisi} (${log.jabatan})</strong>`;
+                        if (log.status == 'ACC KABID') {
+                            descHtml = `<strong>surat telah ditandatangani kabid dikdasmen</strong>`;
+                        }
 
                         html += `
                         <tr>
                           <td style="white-space: nowrap;">${dateStr}</td>
-                          <td>surat dilanjutkan ke <strong>${log.posisi} (${log.jabatan})</strong></td>
+                          <td>${descHtml}</td>
                           <td>${catatan}</td>
                         </tr>
                         `;

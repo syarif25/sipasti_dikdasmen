@@ -108,10 +108,30 @@
                       @csrf
                       <button type="submit" class="btn btn-sm btn-success w-100 mb-1"><i class="ti ti-check"></i> TERIMA SURAT</button>
                     </form>
-                  @elseif($status == 't' || $status == 'DALAM PROSES' || $status == 'ACC KABID' || $status == 'REVISI')
+                  @elseif($status == 't' || $status == 'DALAM PROSES' || $status == 'ACC KABID' || $status == 'REVISI' || $status == 'KEMBALIKAN KE STAF')
                     <div class="d-flex flex-column gap-1">
-                      <button type="button" class="btn btn-sm btn-primary w-100 mb-1" data-bs-toggle="modal" data-bs-target="#modalTeruskan{{ $item->id_pengajuan }}">
-                        <i class="ti ti-arrow-right"></i> LANJUTKAN
+                      @php
+                        $isKabidFinal = false;
+                        if(Auth::user()->level == 6) {
+                            $logsDesc = $item->logs->sortByDesc('id_log');
+                            foreach($logsDesc as $l) {
+                                $logUser = $usersEselon->first(fn($u) => strtolower($u->name) == strtolower($l->jabatan));
+                                if ($logUser) {
+                                    if ($logUser->level >= 7) break;
+                                    if (in_array($logUser->level, [3, 4, 5])) {
+                                        $isKabidFinal = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                      @endphp
+                      <button type="button" class="btn btn-sm {{ $isKabidFinal ? 'btn-success' : 'btn-primary' }} w-100 mb-1" data-bs-toggle="modal" data-bs-target="#modalTeruskan{{ $item->id_pengajuan }}">
+                        @if($isKabidFinal)
+                          <i class="ti ti-check"></i> ACC
+                        @else
+                          <i class="ti ti-arrow-right"></i> LANJUTKAN
+                        @endif
                       </button>
                       <button type="button" class="btn btn-sm btn-danger w-100" data-bs-toggle="modal" data-bs-target="#modalKembalikan{{ $item->id_pengajuan }}">
                         <i class="ti ti-arrow-back-up"></i> KEMBALIKAN
@@ -121,7 +141,7 @@
                     <span class="badge bg-secondary">{{ $status }}</span>
                   @endif
                 @else
-                  <span class="badge bg-secondary">{{ in_array($status, ['k', 'DALAM PROSES', 't']) ? 'sedang proses' : strtolower($status) }}</span>
+                  <span class="badge bg-secondary">{{ in_array($status, ['k', 'DALAM PROSES', 't', 'KEMBALIKAN KE STAF']) ? 'sedang proses' : strtolower($status) }}</span>
                 @endif
               @else
                 <!-- Sekolah/Lembaga melihat status -->

@@ -230,6 +230,18 @@ class PengajuanController extends Controller
             'catatan' => 'required|string',
         ]);
 
+        if (auth()->user()->level == 6) {
+            Log::create([
+                'id_pengajuan' => $id,
+                'posisi' => 'DIKDASMEN',
+                'jabatan' => 'administrator',
+                'catatan' => $request->catatan,
+                'tanggal_posisi' => now(),
+                'status' => 'KEMBALIKAN KE STAF',
+            ]);
+            return redirect()->back()->with('success', 'Dokumen dikembalikan ke Staf untuk direvisi ke lembaga.');
+        }
+
         Log::create([
             'id_pengajuan' => $id,
             'posisi' => 'Dikembalikan',

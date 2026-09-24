@@ -109,11 +109,11 @@
                   $badgeColor = 'warning';
                   $icon = 'ti-loader';
 
-                  if (in_array($status, ['k', 't', 'DALAM PROSES', 'KEMBALIKAN KE STAF'])) {
+                  if (in_array($status, ['k', 't', 'DALAM PROSES', 'KEMBALIKAN KE STAF', 'ACC KABID'])) {
                       $displayStatus = 'SEDANG PROSES';
                       $badgeColor = 'warning';
                       $icon = 'ti-loader';
-                  } elseif (in_array($status, ['SELESAI', 'FINAL', 'ACC KABID'])) {
+                  } elseif (in_array($status, ['SELESAI', 'FINAL'])) {
                       $displayStatus = 'SELESAI';
                       $badgeColor = 'success';
                       $icon = 'ti-check';
@@ -181,7 +181,7 @@
                   $badgeColorLembaga = 'warning';
                   $iconLembaga = 'ti-loader';
                   
-                  if (in_array($status, ['SELESAI', 'FINAL', 'ACC KABID', 'DIARSIP'])) {
+                  if (in_array($status, ['SELESAI', 'FINAL', 'DIARSIP'])) {
                       $displayStatusLembaga = 'SELESAI';
                       $badgeColorLembaga = 'success';
                       $iconLembaga = 'ti-check';

@@ -149,7 +149,9 @@
                 @if($status == 'k' || $status == 't' || $status == 'DALAM PROSES' || $status == 'ACC KABID')
                   <span class="badge bg-warning">sedang proses</span>
                 @elseif($status == 'REVISI')
-                  <span class="badge bg-danger">revisi</span>
+                  <button type="button" class="btn btn-sm btn-danger w-100" data-bs-toggle="modal" data-bs-target="#modalRevisi{{ $item->id_pengajuan }}">
+                    Revisi
+                  </button>
                 @else
                   <span class="badge bg-secondary">{{ strtolower($status) }}</span>
                 @endif
@@ -377,6 +379,61 @@
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                     <button type="submit" class="btn btn-danger">Kembalikan</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal Revisi -->
+          <div class="modal fade" id="modalRevisi{{ $item->id_pengajuan }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form action="{{ route('pengajuan.update', $item->id_pengajuan) }}" method="POST" enctype="multipart/form-data">
+                  @csrf
+                  @method('PUT')
+                  <div class="modal-header bg-primary">
+                    <h5 class="modal-title text-white"><i class="ti ti-upload me-2"></i>Upload Ulang Revisi</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="alert alert-danger mb-4">
+                      <strong>Catatan Revisi:</strong><br>
+                      {{ $latestLog && $latestLog->catatan ? $latestLog->catatan : 'Tidak ada catatan.' }}
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">File 1 (Surat Pengantar Baru) *</label>
+                      <input class="form-control" type="file" name="file1" accept=".pdf" required>
+                      <small class="text-muted">Wajib diunggah (Format PDF max 10MB).</small>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">File 2 (Lampiran Baru)</label>
+                      <div class="d-flex gap-4 mb-2">
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="file2_option_{{ $item->id_pengajuan }}" id="revisi_file2_no_change_{{ $item->id_pengajuan }}" value="no_change" checked onchange="document.getElementById('revisi_file2_input_container_{{ $item->id_pengajuan }}').style.display='none'">
+                          <label class="form-check-label" for="revisi_file2_no_change_{{ $item->id_pengajuan }}">
+                            Tetap gunakan file lama
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="file2_option_{{ $item->id_pengajuan }}" id="revisi_file2_change_{{ $item->id_pengajuan }}" value="change" onchange="document.getElementById('revisi_file2_input_container_{{ $item->id_pengajuan }}').style.display='block'">
+                          <label class="form-check-label" for="revisi_file2_change_{{ $item->id_pengajuan }}">
+                            Ada perubahan file
+                          </label>
+                        </div>
+                      </div>
+                      <div id="revisi_file2_input_container_{{ $item->id_pengajuan }}" style="display: none;">
+                        <input class="form-control" type="file" name="file2" accept=".pdf">
+                        <small class="text-muted">Unggah file lampiran revisi (Opsional, Format PDF max 10MB).</small>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary"><i class="ti ti-send"></i> Kirim Ulang</button>
                   </div>
                 </form>
               </div>

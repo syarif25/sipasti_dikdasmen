@@ -138,6 +138,43 @@ class PengajuanController extends Controller
         return redirect()->route('pengajuan.index')->with('success', 'Pengajuan berhasil ditambahkan!');
     }
 
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'file1' => 'required|mimes:pdf|max:10240',
+            'file2' => 'nullable|mimes:pdf|max:10240',
+        ]);
+
+        $pengajuan = Pengajuan::findOrFail($id);
+        $latestLog = \App\Models\Log::where('id_pengajuan', $pengajuan->id_pengajuan)->orderBy('id_log', 'desc')->first();
+        
+        $file1Path = $latestLog ? $latestLog->file1 : null;
+        $file2Path = $latestLog ? $latestLog->file2 : null;
+
+        if ($request->hasFile('file1')) {
+            $file1Path = $request->file('file1')->store('pengajuan', 'public');
+        }
+        
+        if ($request->hasFile('file2')) {
+            $file2Path = $request->file('file2')->store('pengajuan', 'public');
+        } elseif ($request->input('file2_option_' . $pengajuan->id_pengajuan) == 'change' && !$request->hasFile('file2')) {
+            $file2Path = null;
+        }
+
+        Log::create([
+            'id_pengajuan' => $pengajuan->id_pengajuan,
+            'posisi' => 'DIKDASMEN',
+            'jabatan' => 'administrator',
+            'catatan' => 'Telah diperbaiki dan diunggah ulang oleh Sekolah/Lembaga',
+            'tanggal_posisi' => now(),
+            'file1' => $file1Path,
+            'file2' => $file2Path,
+            'status' => 'k',
+        ]);
+
+        return redirect()->back()->with('success', 'Dokumen revisi berhasil dikirim ulang.');
+    }
+
     public function terima(Request $request, $id)
     {
         $request->validate([

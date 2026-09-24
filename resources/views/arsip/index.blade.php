@@ -84,13 +84,32 @@
               <div class="fw-semibold text-muted">({{ $jabatanPosisi }})</div>
             </td>
             <td>
-              @if($status == 'SELESAI' || $status == 'FINAL' || $status == 'DIARSIP' || $status == 'ACC KABID')
-                <span class="badge bg-success text-white"><i class="ti ti-check"></i> {{ $status }}</span>
-              @elseif($status == 'REVISI')
-                <span class="badge bg-danger text-white"><i class="ti ti-alert-triangle"></i> REVISI</span>
-              @else
-                <span class="badge bg-warning text-dark"><i class="ti ti-loader"></i> {{ $status }}</span>
-              @endif
+              @php
+                $displayStatus = 'SEDANG PROSES';
+                $badgeColor = 'warning';
+                $icon = 'ti-loader';
+
+                if (in_array($status, ['k', 't', 'DALAM PROSES', 'KEMBALIKAN KE STAF'])) {
+                    $displayStatus = 'SEDANG PROSES';
+                    $badgeColor = 'warning';
+                    $icon = 'ti-loader';
+                } elseif (in_array($status, ['SELESAI', 'FINAL', 'ACC KABID'])) {
+                    $displayStatus = 'SELESAI';
+                    $badgeColor = 'success';
+                    $icon = 'ti-check';
+                } elseif ($status == 'DIARSIP') {
+                    $displayStatus = 'DIARSIP';
+                    $badgeColor = 'info';
+                    $icon = 'ti-archive';
+                } elseif ($status == 'REVISI') {
+                    $displayStatus = 'REVISI';
+                    $badgeColor = 'danger';
+                    $icon = 'ti-alert-triangle';
+                }
+              @endphp
+              <span class="badge bg-{{ $badgeColor }} text-{{ $badgeColor == 'warning' ? 'dark' : 'white' }}">
+                <i class="ti {{ $icon }}"></i> {{ $displayStatus }}
+              </span>
             </td>
             <td>{{ $latestLog ? \Carbon\Carbon::parse($latestLog->tanggal_posisi)->format('Y-m-d H:i:s') : '-' }}</td>
             <td>

@@ -104,6 +104,28 @@
                           $isTargetedUser = true;
                       }
                   }
+
+                  $displayStatus = 'SEDANG PROSES';
+                  $badgeColor = 'warning';
+                  $icon = 'ti-loader';
+
+                  if (in_array($status, ['k', 't', 'DALAM PROSES', 'KEMBALIKAN KE STAF'])) {
+                      $displayStatus = 'SEDANG PROSES';
+                      $badgeColor = 'warning';
+                      $icon = 'ti-loader';
+                  } elseif (in_array($status, ['SELESAI', 'FINAL', 'ACC KABID'])) {
+                      $displayStatus = 'SELESAI';
+                      $badgeColor = 'success';
+                      $icon = 'ti-check';
+                  } elseif ($status == 'DIARSIP') {
+                      $displayStatus = 'DIARSIP';
+                      $badgeColor = 'info';
+                      $icon = 'ti-archive';
+                  } elseif ($status == 'REVISI') {
+                      $displayStatus = 'REVISI';
+                      $badgeColor = 'danger';
+                      $icon = 'ti-alert-triangle';
+                  }
                 @endphp
                 @if($isTargetedUser)
                   @if(Auth::user()->level >= 7 && $status == 'k')
@@ -143,21 +165,39 @@
                       @endif
                     </div>
                   @else
-                    <span class="badge bg-secondary">{{ $status }}</span>
+                    <span class="badge bg-{{ $badgeColor }} text-{{ $badgeColor == 'warning' ? 'dark' : 'white' }}">
+                      <i class="ti {{ $icon }}"></i> {{ $displayStatus }}
+                    </span>
                   @endif
                 @else
-                  <span class="badge bg-secondary">{{ in_array($status, ['k', 'DALAM PROSES', 't', 'KEMBALIKAN KE STAF']) ? 'sedang proses' : strtolower($status) }}</span>
+                  <span class="badge bg-{{ $badgeColor }} text-{{ $badgeColor == 'warning' ? 'dark' : 'white' }}">
+                    <i class="ti {{ $icon }}"></i> {{ $displayStatus }}
+                  </span>
                 @endif
               @else
                 <!-- Sekolah/Lembaga melihat status -->
-                @if($status == 'k' || $status == 't' || $status == 'DALAM PROSES' || $status == 'ACC KABID')
-                  <span class="badge bg-warning">sedang proses</span>
-                @elseif($status == 'REVISI')
+                @php
+                  $displayStatusLembaga = 'SEDANG PROSES';
+                  $badgeColorLembaga = 'warning';
+                  $iconLembaga = 'ti-loader';
+                  
+                  if (in_array($status, ['SELESAI', 'FINAL', 'ACC KABID', 'DIARSIP'])) {
+                      $displayStatusLembaga = 'SELESAI';
+                      $badgeColorLembaga = 'success';
+                      $iconLembaga = 'ti-check';
+                  } elseif ($status == 'REVISI') {
+                      $displayStatusLembaga = 'REVISI';
+                  }
+                @endphp
+
+                @if($displayStatusLembaga == 'REVISI')
                   <button type="button" class="btn btn-sm btn-danger w-100" data-bs-toggle="modal" data-bs-target="#modalRevisi{{ $item->id_pengajuan }}">
                     <i class="ti ti-edit"></i> REVISI
                   </button>
                 @else
-                  <span class="badge bg-secondary">{{ strtolower($status) }}</span>
+                  <span class="badge bg-{{ $badgeColorLembaga }} text-{{ $badgeColorLembaga == 'warning' ? 'dark' : 'white' }}">
+                    <i class="ti {{ $iconLembaga }}"></i> {{ $displayStatusLembaga }}
+                  </span>
                 @endif
               @endif
             </td>

@@ -41,6 +41,7 @@
             <th>Posisi</th>
             <th>Jabatan</th>
             <th>Status</th>
+            <th>File</th>
             <th>Tanggal Posisi</th>
             <th>Aksi</th>
           </tr>
@@ -66,6 +67,18 @@
                 if($log->status == 'REVISI') $color = 'danger';
               @endphp
               <span class="badge bg-{{ $color }}">{{ $log->status }}</span>
+            </td>
+            <td>
+              <div class="d-flex flex-column gap-1">
+                @if($log->file1)
+                  <a href="{{ Storage::url($log->file1) }}" target="_blank" class="btn btn-xs btn-outline-primary"><i class="ti ti-file-description"></i> File 1</a>
+                @else
+                  <span class="btn btn-xs btn-outline-secondary disabled"><i class="ti ti-file-description"></i> File 1</span>
+                @endif
+                @if($log->file2)
+                  <a href="{{ Storage::url($log->file2) }}" target="_blank" class="btn btn-xs btn-outline-primary"><i class="ti ti-file-description"></i> File 2</a>
+                @endif
+              </div>
             </td>
             <td>{{ \Carbon\Carbon::parse($log->tanggal_posisi)->translatedFormat('d M Y, H:i:s') }}</td>
             <td>

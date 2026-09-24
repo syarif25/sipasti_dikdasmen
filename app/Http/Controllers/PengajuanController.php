@@ -166,7 +166,7 @@ class PengajuanController extends Controller
 
         $rules = [
             'tujuan_user_id' => 'required|string',
-            'catatan' => 'required|string',
+            'catatan' => 'nullable|string',
         ];
 
         if ($isAdminAndAccKabid) {
@@ -227,7 +227,7 @@ class PengajuanController extends Controller
     public function kembalikan(Request $request, $id)
     {
         $request->validate([
-            'catatan' => 'required|string',
+            'catatan' => 'nullable|string',
         ]);
 
         if (auth()->user()->level == 6) {

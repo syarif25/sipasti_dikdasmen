@@ -324,7 +324,7 @@
 
                       <div class="mb-3">
                         <label class="form-label">Catatan</label>
-                        <textarea class="form-control" name="catatan" rows="3" required placeholder="Tulis instruksi/catatan..."></textarea>
+                        <textarea class="form-control" name="catatan" rows="3" placeholder="Tulis instruksi/catatan (Opsional)..."></textarea>
                       </div>
                   </div>
                   <div class="modal-footer">
@@ -370,7 +370,7 @@
 
                     <div class="mb-3">
                       <label class="form-label">Isi Catatan Revisi</label>
-                      <textarea class="form-control" name="catatan" rows="4" required placeholder="Tulis alasan pengembalian surat..."></textarea>
+                      <textarea class="form-control" name="catatan" rows="4" placeholder="Tulis alasan pengembalian surat (Opsional)..."></textarea>
                     </div>
                   </div>
                   <div class="modal-footer">

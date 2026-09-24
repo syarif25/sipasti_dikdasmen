@@ -252,8 +252,8 @@
                         let descHtml = `surat dilanjutkan ke <strong>${log.posisi} (${log.jabatan})</strong>`;
                         if (log.status == 'ACC KABID') {
                             descHtml = `<strong>surat telah ditandatangani kabid dikdasmen</strong>`;
-                        } else if (log.status == 'REVISI') {
-                            descHtml = `surat <strong>dikembalikan ke Sekolah/Lembaga</strong> untuk direvisi`;
+                        } else if (log.status == 'REVISI' || log.status == 'KEMBALIKAN KE STAF') {
+                            descHtml = `surat <strong>dikembalikan ke pengirim</strong>`;
                         }
 
                         html += `

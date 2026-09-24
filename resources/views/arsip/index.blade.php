@@ -249,8 +249,13 @@
                         let dateStr = `${day} ${month} ${year}, ${h}:${m}:${s}`;
                         
                         let catatan = log.catatan ? log.catatan : '-';
+                        
                         let descHtml = `surat dilanjutkan ke <strong>${log.posisi} (${log.jabatan})</strong>`;
-                        if (log.status == 'ACC KABID') {
+                        if (log.status == 'k') {
+                            descHtml = `surat <strong>dikirim</strong> ke <strong>${log.posisi} (${log.jabatan})</strong>`;
+                        } else if (log.status == 't') {
+                            descHtml = `surat <strong>diterima</strong> oleh <strong>${log.posisi} (${log.jabatan})</strong>`;
+                        } else if (log.status == 'ACC KABID') {
                             descHtml = `<strong>surat telah ditandatangani kabid dikdasmen</strong>`;
                         } else if (log.status == 'REVISI' || log.status == 'KEMBALIKAN KE STAF') {
                             descHtml = `surat <strong>dikembalikan ke pengirim</strong>`;

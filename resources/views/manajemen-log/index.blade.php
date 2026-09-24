@@ -130,18 +130,12 @@
                       <textarea class="form-control" name="catatan" rows="3">{{ $log->catatan }}</textarea>
                     </div>
                     <div class="mb-3">
-                      <label class="form-label">File 1 (Opsional, PDF)</label>
-                      <input type="file" class="form-control" name="file1" accept=".pdf">
-                      @if($log->file1)
-                        <small class="text-muted">Biarkan kosong jika tidak ingin mengubah file saat ini.</small>
-                      @endif
+                      <label class="form-label">File 1 Path</label>
+                      <input type="text" class="form-control" name="file1" value="{{ $log->file1 }}">
                     </div>
                     <div class="mb-3">
-                      <label class="form-label">File 2 (Opsional, PDF)</label>
-                      <input type="file" class="form-control" name="file2" accept=".pdf">
-                      @if($log->file2)
-                        <small class="text-muted">Biarkan kosong jika tidak ingin mengubah file saat ini.</small>
-                      @endif
+                      <label class="form-label">File 2 Path</label>
+                      <input type="text" class="form-control" name="file2" value="{{ $log->file2 }}">
                     </div>
                     <div class="mb-3">
                       <label class="form-label">Tanggal Posisi</label>
@@ -226,12 +220,12 @@
             <textarea class="form-control" name="catatan" rows="3"></textarea>
           </div>
           <div class="mb-3">
-            <label class="form-label">File 1 (Opsional, PDF)</label>
-            <input type="file" class="form-control" name="file1" accept=".pdf">
+            <label class="form-label">File 1 Path</label>
+            <input type="text" class="form-control" name="file1">
           </div>
           <div class="mb-3">
-            <label class="form-label">File 2 (Opsional, PDF)</label>
-            <input type="file" class="form-control" name="file2" accept=".pdf">
+            <label class="form-label">File 2 Path</label>
+            <input type="text" class="form-control" name="file2">
           </div>
           <div class="mb-3">
             <label class="form-label">Tanggal Posisi</label>

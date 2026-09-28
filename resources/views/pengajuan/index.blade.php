@@ -88,7 +88,7 @@
               <div class="fw-bold">{{ $posisi }}</div>
               <div class="fw-semibold text-muted">({{ $jabatanPosisi }})</div>
             </td>
-            <td>{{ $latestLog ? \Carbon\Carbon::parse($latestLog->tanggal_posisi)->format('d-m-Y H:i:s') : '-' }}</td>
+            <td data-order="{{ $latestLog ? $latestLog->tanggal_posisi : '0' }}">{{ $latestLog ? \Carbon\Carbon::parse($latestLog->tanggal_posisi)->format('d-m-Y H:i:s') : '-' }}</td>
             <td>
               @if(Auth::user()->level >= 2)
                 @php

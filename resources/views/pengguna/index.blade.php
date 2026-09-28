@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+@push('styles')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+@endpush
+
 @section('content')
 <div class="card bg-info-subtle shadow-none position-relative overflow-hidden mb-4">
   <div class="card-body px-4 py-3">
@@ -259,6 +264,7 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     if ($.fn.DataTable.isDataTable('#dataTable')) {
@@ -268,6 +274,26 @@
       "language": {
         "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json"
       }
+    });
+
+    // Initialize Select2 for Tambah Modal
+    $('#modalTambah').on('shown.bs.modal', function () {
+        $('.lembaga-select.tambah').select2({
+            theme: 'bootstrap-5',
+            dropdownParent: $('#modalTambah'),
+            width: '100%'
+        });
+    });
+
+    // Initialize Select2 for Edit Modals when they are opened
+    $('.modal[id^="modalEdit"]').on('shown.bs.modal', function () {
+        var modalId = $(this).attr('id');
+        var userId = modalId.replace('modalEdit', '');
+        $('.lembaga-select.edit' + userId).select2({
+            theme: 'bootstrap-5',
+            dropdownParent: $('#' + modalId),
+            width: '100%'
+        });
     });
 
     $('.btn-delete').on('click', function(e) {

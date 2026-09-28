@@ -10,6 +10,7 @@ use App\Models\Jabatan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Jobs\SendWaNotification;
 
 class PengajuanController extends Controller
 {
@@ -23,7 +24,7 @@ class PengajuanController extends Controller
         }])->orderBy('created_at', 'desc');
 
         // Filter for school level (Level 1)
-        if (auth()->user()->level == 1) {
+        if (auth()->user()->level == 1 && stripos(auth()->user()->name, 'admin') === false) {
             $query->where('id_lembaga', auth()->user()->id_lembaga);
         }
 
@@ -34,7 +35,7 @@ class PengajuanController extends Controller
             $latestLog = $p->logs->sortByDesc('id_log')->first();
             if (!$latestLog) return false;
 
-            if (auth()->user()->level >= 3 && auth()->user()->level <= 7 && $latestLog->status == 'REVISI') {
+            if ((auth()->user()->level >= 3 || stripos(auth()->user()->name, 'admin') !== false) && $latestLog->status == 'REVISI') {
                 return false;
             }
 
@@ -47,7 +48,7 @@ class PengajuanController extends Controller
                 $latestLog = $p->logs->sortByDesc('id_log')->first();
                 return strtolower($latestLog->jabatan) == strtolower(auth()->user()->name);
             });
-        } elseif (auth()->user()->level >= 7) {
+        } elseif (auth()->user()->level >= 7 || stripos(auth()->user()->name, 'admin') !== false) {
             // Admin Dikdasmen only sees documents currently at DIKDASMEN
             $pengajuans = $pengajuans->filter(function($p) {
                 $latestLog = $p->logs->sortByDesc('id_log')->first();
@@ -64,7 +65,10 @@ class PengajuanController extends Controller
         $jenisSurats = JenisSurat::all();
         // Fetch active users for destination dropdown in action modal, sorted by level and name
         $usersEselon = User::with('jabatan')
-            ->whereIn('level', [3, 4, 5, 6, 7])
+            ->where(function($q) {
+                $q->whereIn('level', [3, 4, 5, 6, 7])
+                  ->orWhere('name', 'like', '%admin%');
+            })
             ->where('status', 1)
             ->orderBy('level', 'desc')
             ->orderBy('name', 'asc')
@@ -86,8 +90,9 @@ class PengajuanController extends Controller
         }
         
         $jabatans = Jabatan::all();
+        $lembagas = \App\Models\Lembaga::all();
         
-        return view('pengajuan.create', compact('jenisSurats', 'tahunAkademiks', 'jabatans'));
+        return view('pengajuan.create', compact('jenisSurats', 'tahunAkademiks', 'jabatans', 'lembagas'));
     }
 
     /**
@@ -100,8 +105,8 @@ class PengajuanController extends Controller
             'jenis_surat' => 'required|string',
             'perihal' => 'required|string',
             'tujuan' => 'required|string',
-            'file1' => 'required|mimes:pdf|max:10240', // 10MB max
-            'file2' => 'nullable|mimes:pdf|max:10240',
+            'file1' => 'required|mimes:pdf|max:51200', // 10MB max
+            'file2' => 'nullable|mimes:pdf|max:51200',
         ]);
 
         $activeYear = TahunAkademik::where('status', 'Aktif')->first();
@@ -135,11 +140,21 @@ class PengajuanController extends Controller
             $file2Path = $request->file('file2')->store('pengajuan', 'public');
         }
 
+        // Auto-Routing: Tentukan Posisi Awal
+        $posisiTujuan = 'DIKDASMEN';
+        $jabatanTujuan = 'administrator';
+
+        // Jika pengirim adalah Admin (level > 1) dan memilih posisi_tujuan
+        if ((auth()->user()->level > 1 || stripos(auth()->user()->name, 'admin') !== false || (auth()->user()->lembaga && stripos(auth()->user()->lembaga->nama_lembaga, 'dikdasmen') !== false)) && $request->filled('posisi_tujuan')) {
+            $posisiTujuan = $request->posisi_tujuan;
+            $jabatanTujuan = $request->posisi_tujuan; // Misal: Bendahara, BPK2M, Sekretariat
+        }
+
         // Create initial Log
         Log::create([
             'id_pengajuan' => $idPengajuan,
-            'posisi' => 'DIKDASMEN',
-            'jabatan' => 'administrator',
+            'posisi' => $posisiTujuan,
+            'jabatan' => $jabatanTujuan,
             'catatan' => null,
             'tanggal_posisi' => now(),
             'file1' => $file1Path,
@@ -153,8 +168,8 @@ class PengajuanController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'file1' => 'required|mimes:pdf|max:10240',
-            'file2' => 'nullable|mimes:pdf|max:10240',
+            'file1' => 'required|mimes:pdf|max:51200',
+            'file2' => 'nullable|mimes:pdf|max:51200',
         ]);
 
         $pengajuan = Pengajuan::findOrFail($id);
@@ -210,13 +225,40 @@ class PengajuanController extends Controller
         return redirect()->back()->with('success', 'Dokumen telah diterima.');
     }
 
+        public function selesai(Request $request, $id)
+    {
+        $pengajuan = Pengajuan::findOrFail($id);
+        $latestLog = \App\Models\Log::where('id_pengajuan', $id)->orderBy('id_log', 'desc')->first();
+
+        Log::create([
+            'id_pengajuan' => $id,
+            'posisi' => 'Pengirim',
+            'jabatan' => 'Administrator',
+            'catatan' => $request->input('catatan', 'Berkas dikembalikan ke pengirim (Selesai diproses)'),
+            'tanggal_posisi' => now(),
+            'file1' => $latestLog ? $latestLog->file1 : null,
+            'file2' => $latestLog ? $latestLog->file2 : null,
+            'status' => 'SELESAI',
+        ]);
+
+        // === NOTIFIKASI WA — Surat Selesai, Kembali ke Pengirim ===
+        $pengajuanObj = \App\Models\Pengajuan::with('lembaga')->find($id);
+        $pengirimUser = \App\Models\User::where('id_lembaga', $pengajuanObj->id_lembaga)
+            ->where('id_jabatan', '1')->first();
+        $ctx = $this->buildCtx($pengajuanObj, 'Pengirim', $request->catatan ?? '');
+        $this->kirimWa($pengirimUser, 'Pemberitahuan Surat Telah Selesai Diproses', $ctx);
+        // ========================================================================
+
+        return redirect()->back()->with('success', 'Dokumen berhasil diselesaikan dan dikembalikan ke pengirim.');
+    }
+
     public function teruskan(Request $request, $id)
     {
         $pengajuan = Pengajuan::findOrFail($id);
         $latestLog = \App\Models\Log::where('id_pengajuan', $id)->orderBy('id_log', 'desc')->first();
 
         // Check if Admin (Level 7 or 8) is forwarding a document that has been ACC by Kabid
-        $isAdminAndAccKabid = (auth()->user()->level >= 7 && $latestLog && $latestLog->status == 'ACC KABID');
+        $isAdminAndAccKabid = ((auth()->user()->level >= 7 || stripos(auth()->user()->name, 'admin') !== false) && $latestLog && $latestLog->status == 'ACC KABID');
 
         $rules = [
             'tujuan_user_id' => 'required|string',
@@ -224,8 +266,8 @@ class PengajuanController extends Controller
         ];
 
         if ($isAdminAndAccKabid) {
-            $rules['file1'] = 'required|mimes:pdf|max:10240';
-            $rules['file2'] = 'nullable|mimes:pdf|max:10240';
+            $rules['file1'] = 'required|mimes:pdf|max:51200';
+            $rules['file2'] = 'nullable|mimes:pdf|max:51200';
         }
 
         $request->validate($rules);
@@ -275,6 +317,45 @@ class PengajuanController extends Controller
             'file2' => $file2Path,
         ]);
 
+        // === NOTIFIKASI WA — Surat Diteruskan ===
+        $posisiText = ($posisiLog == 'DIKDASMEN') ? "DIKDASMEN ({$namaTujuan})" : $posisiLog;
+        $pengajuanObj = \App\Models\Pengajuan::with('lembaga')->find($id);
+        $ctx = $this->buildCtx($pengajuanObj, $posisiText, $request->catatan ?? '');
+
+        // === Notif ke Penerima Baru ===
+        if (in_array($namaTujuan, ['BPK2M', 'Bendahara', 'Sekretariat'])) {
+            // Jika ke lembaga Sipasti, ambil nomor HP dari DB Sipasti
+            $map = [
+                'BPK2M'       => 'LMB0014',
+                'Bendahara'   => 'LMB0016',
+                'Sekretariat' => 'LMB0015',
+            ];
+            $idLembagaSipasti = $map[$namaTujuan] ?? null;
+            if ($idLembagaSipasti) {
+                $adminSipasti = \Illuminate\Support\Facades\DB::connection('sipasti')
+                    ->table('user')
+                    ->where('id_lembaga', $idLembagaSipasti)
+                    ->where('id_jabatan', '1')
+                    ->whereNotNull('no_hp')
+                    ->first();
+                if ($adminSipasti && $adminSipasti->no_hp) {
+                    $this->kirimWa( (object)['no_hp' => $adminSipasti->no_hp], 'Pemberitahuan Surat Masuk dari Dikdasmen', $ctx);
+                }
+            }
+
+            // Notif ke Pengirim Awal bahwa surat telah dilanjutkan ke Lembaga Pusat
+            $pengirimUser = \App\Models\User::where('id_lembaga', $pengajuanObj->id_lembaga)
+                ->where('id_jabatan', '1')->first();
+            $this->kirimWa($pengirimUser, 'Pemberitahuan Posisi Surat Anda', $ctx);
+        } else {
+            // Internal Dikdasmen (cari user berdasarkan id atau nama)
+            $userTujuan = is_numeric($request->tujuan_user_id)
+                ? \App\Models\User::find($request->tujuan_user_id)
+                : \App\Models\User::where('name', $namaTujuan)->first();
+            $this->kirimWa($userTujuan, 'Pemberitahuan Surat Masuk', $ctx);
+        }
+        // ========================================================================
+
         return redirect()->back()->with('success', 'Dokumen berhasil diteruskan.');
     }
 
@@ -313,6 +394,14 @@ class PengajuanController extends Controller
             'status' => 'REVISI',
         ]);
 
+        // === NOTIFIKASI WA — Surat Dikembalikan ke Pengirim ===
+        $pengajuanObj = \App\Models\Pengajuan::with('lembaga')->find($id);
+        $pengirimUser = \App\Models\User::where('id_lembaga', $pengajuanObj->id_lembaga)
+            ->where('id_jabatan', '1')->first();
+        $ctx = $this->buildCtx($pengajuanObj, 'Pengirim', $request->catatan ?? '');
+        $this->kirimWa($pengirimUser, 'Pemberitahuan Surat Dikembalikan untuk Revisi', $ctx);
+        // ========================================================================
+
         return redirect()->back()->with('success', 'Dokumen dikembalikan untuk revisi.');
     }
 
@@ -321,4 +410,54 @@ class PengajuanController extends Controller
         $logs = Log::where('id_pengajuan', $id)->orderBy('created_at', 'asc')->get();
         return response()->json($logs);
     }
+
+    /**
+     * =====================================================================
+     * NOTIFIKASI WA — Internal Dikdasmen
+     * Mengirim pesan WA background ke nomor tujuan tertentu.
+     * =====================================================================
+     */
+    private function kirimWa($targetUser, string $title, array $ctx = []): void
+    {
+        if (empty($targetUser?->no_hp)) return;
+
+        $pengirimLembaga = $ctx['pengirim_lembaga'] ?? '-';
+        $tujuan          = $ctx['tujuan']          ?? '-';
+        $jenisSurat      = $ctx['jenis_surat']     ?? '-';
+        $perihal         = $ctx['perihal']          ?? '-';
+        $posisiSekarang  = $ctx['posisi']           ?? '-';
+        $catatan         = $ctx['catatan']          ?? '';
+        $waktu           = now()->format('Y-m-d H:i:s');
+
+        $pesan = "*{$title}*\n\n"
+               . "Pengirim   : {$pengirimLembaga}\n"
+               . "Tujuan     : {$tujuan}\n"
+               . "Posisi     : *{$posisiSekarang}*\n"
+               . "Jenis Surat: {$jenisSurat}\n"
+               . "Perihal    : {$perihal}\n";
+
+        if (!empty($catatan)) {
+            $pesan .= "\n*CATATAN: {$catatan}*\n";
+        }
+
+        $pesan .= "Waktu      : {$waktu}\n\n"
+               . "Silakan login ke www.com dengan login menggunakan username dan password yang valid.\n\n"
+               . "Hajah Khidmah, ikhtiar menjadi lebih baik";
+
+        SendWaNotification::dispatch($targetUser->no_hp, $pesan);
+    }
+
+    private function buildCtx($pengajuan, string $posisiSekarang, string $catatan = ''): array
+    {
+        $pengajuan->loadMissing('lembaga');
+        return [
+            'pengirim_lembaga' => $pengajuan->lembaga?->nama_lembaga ?? '-',
+            'tujuan'           => $pengajuan->tujuan ?? '-',
+            'jenis_surat'      => $pengajuan->jenis_surat ?? '-',
+            'perihal'          => $pengajuan->perihal ?? '-',
+            'posisi'           => $posisiSekarang,
+            'catatan'          => $catatan,
+        ];
+    }
+
 }

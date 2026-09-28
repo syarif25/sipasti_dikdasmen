@@ -36,6 +36,7 @@ Route::middleware(['auth'])->group(function () {
     // Pengajuan & Aksi Eskalasi
     Route::post('pengajuan/{id}/terima', [\App\Http\Controllers\PengajuanController::class, 'terima'])->name('pengajuan.terima');
     Route::post('pengajuan/{id}/teruskan', [\App\Http\Controllers\PengajuanController::class, 'teruskan'])->name('pengajuan.teruskan');
+    Route::post('pengajuan/{id}/selesai', [\App\Http\Controllers\PengajuanController::class, 'selesai'])->name('pengajuan.selesai');
     Route::post('pengajuan/{id}/kembalikan', [\App\Http\Controllers\PengajuanController::class, 'kembalikan'])->name('pengajuan.kembalikan');
     Route::get('pengajuan/{id}/timeline', [\App\Http\Controllers\PengajuanController::class, 'timeline'])->name('pengajuan.timeline');
     Route::resource('pengajuan', \App\Http\Controllers\PengajuanController::class);

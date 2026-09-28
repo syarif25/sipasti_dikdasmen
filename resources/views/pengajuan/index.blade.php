@@ -90,12 +90,12 @@
             </td>
             <td data-order="{{ $latestLog ? $latestLog->tanggal_posisi : '0' }}">{{ $latestLog ? \Carbon\Carbon::parse($latestLog->tanggal_posisi)->format('d-m-Y H:i:s') : '-' }}</td>
             <td>
-              @if(Auth::user()->level >= 2)
+              @if(Auth::user()->level >= 2 || stripos(Auth::user()->name, 'admin') !== false)
                 @php
                   // Admin Dikdasmen is targeted if document is new (administrator), ACC Kabid, or specifically forwarded to their name.
                   // Other users are targeted only if the document is specifically at their name.
                   $isTargetedUser = false;
-                  if (Auth::user()->level >= 7) {
+                  if (Auth::user()->level >= 7 || stripos(Auth::user()->name, 'admin') !== false) {
                       if (strtolower($jabatanPosisi) == 'administrator' || $status == 'ACC KABID' || strtolower($jabatanPosisi) == strtolower(Auth::user()->name)) {
                           $isTargetedUser = true;
                       }
@@ -128,22 +128,24 @@
                   }
                 @endphp
                 @if($isTargetedUser)
-                  @if(Auth::user()->level >= 7 && $status == 'k')
+                  @if((Auth::user()->level >= 7 || stripos(Auth::user()->name, 'admin') !== false) && $status == 'k')
                     <form action="{{ route('pengajuan.terima', $item->id_pengajuan) }}" method="POST">
                       @csrf
                       <button type="submit" class="btn btn-sm btn-success w-100 mb-1"><i class="ti ti-check"></i> TERIMA SURAT</button>
                     </form>
-                  @elseif($status == 't' || $status == 'DALAM PROSES' || $status == 'ACC KABID' || $status == 'REVISI' || $status == 'KEMBALIKAN KE STAF')
+                  @elseif($status == 't' || $status == 'DALAM PROSES' || $status == 'ACC KABID' || $status == 'REVISI' || $status == 'KEMBALIKAN KE STAF' || $status == 'FN')
                     <div class="d-flex flex-column gap-1">
                       @php
                         $isKabidFinal = false;
                         if(Auth::user()->level == 6) {
                             $logsDesc = $item->logs->sortByDesc('id_log');
                             foreach($logsDesc as $l) {
+                                $isLAdmin = (strtolower($l->jabatan) == 'administrator' || stripos($l->jabatan, 'admin') !== false);
                                 $logUser = $usersEselon->first(fn($u) => strtolower($u->name) == strtolower($l->jabatan));
-                                if ($logUser) {
-                                    if ($logUser->level >= 7) break;
-                                    if (in_array($logUser->level, [3, 4, 5])) {
+                                if ($logUser || $isLAdmin) {
+                                    $lUserLevel = $isLAdmin ? 7 : $logUser->level;
+                                    if ($lUserLevel >= 7) break;
+                                    if (in_array($lUserLevel, [3, 4, 5])) {
                                         $isKabidFinal = true;
                                         break;
                                     }
@@ -151,17 +153,23 @@
                             }
                         }
                       @endphp
-                      <button type="button" class="btn btn-sm {{ $isKabidFinal ? 'btn-success' : 'btn-primary' }} w-100 mb-1" data-bs-toggle="modal" data-bs-target="#modalTeruskan{{ $item->id_pengajuan }}">
-                        @if($isKabidFinal)
-                          <i class="ti ti-check"></i> ACC
-                        @else
-                          <i class="ti ti-arrow-right"></i> LANJUTKAN
-                        @endif
-                      </button>
-                      @if($status != 'ACC KABID')
-                        <button type="button" class="btn btn-sm btn-danger w-100" data-bs-toggle="modal" data-bs-target="#modalKembalikan{{ $item->id_pengajuan }}">
-                          <i class="ti ti-arrow-back-up"></i> KEMBALIKAN
+                      @if($status == 'FN')
+                        <button type="button" class="btn btn-sm btn-success w-100 mb-1" data-bs-toggle="modal" data-bs-target="#modalSelesai{{ $item->id_pengajuan }}">
+                          <i class="ti ti-send"></i> KEMBALIKAN KE PENGIRIM
                         </button>
+                      @else
+                        <button type="button" class="btn btn-sm {{ $isKabidFinal ? 'btn-success' : 'btn-primary' }} w-100 mb-1" data-bs-toggle="modal" data-bs-target="#modalTeruskan{{ $item->id_pengajuan }}">
+                          @if($isKabidFinal)
+                            <i class="ti ti-check"></i> ACC
+                          @else
+                            <i class="ti ti-arrow-right"></i> LANJUTKAN
+                          @endif
+                        </button>
+                        @if($status != 'ACC KABID')
+                          <button type="button" class="btn btn-sm btn-danger w-100" data-bs-toggle="modal" data-bs-target="#modalKembalikan{{ $item->id_pengajuan }}">
+                            <i class="ti ti-arrow-back-up"></i> KEMBALIKAN
+                          </button>
+                        @endif
                       @endif
                     </div>
                   @else
@@ -252,7 +260,7 @@
                   <div class="modal-body">
                     @php
                       $latestLog = $item->logs->sortByDesc('id_log')->first();
-                      $userLevel = auth()->user()->level;
+                      $userLevel = (stripos(auth()->user()->name, 'admin') !== false) ? max(7, auth()->user()->level) : auth()->user()->level;
                       $isAccKabid = ($latestLog && $latestLog->status == 'ACC KABID');
                     @endphp
 
@@ -299,19 +307,26 @@
                                 $logsDesc = $item->logs->sortByDesc('id_log');
                                 $hasProcessedDown = false;
                                 foreach($logsDesc as $log) {
+                                    $isLAdmin = (strtolower($log->jabatan) == 'administrator' || stripos($log->jabatan, 'admin') !== false);
                                     $logUser = $usersEselon->first(fn($u) => strtolower($u->name) == strtolower($log->jabatan));
-                                    if ($logUser) {
-                                        if ($logUser->level >= 7) {
+                                    if ($logUser || $isLAdmin) {
+                                        $lUserLevel = $isLAdmin ? 7 : $logUser->level;
+                                        if ($lUserLevel >= 7) {
                                             break; // Found Staf/Admin Dikdasmen first, meaning it just started a new cycle
                                         }
-                                        if (in_array($logUser->level, [3, 4, 5])) {
+                                        if (in_array($lUserLevel, [3, 4, 5])) {
                                             $hasProcessedDown = true;
                                             break; // Found KATU/Kabag/Kasubag before Staf, meaning it has processed down
                                         }
                                     }
                                 }
                                 $allowedLevels = $hasProcessedDown ? [7] : [4, 5, 7];
-                                $targetUsers = $usersEselon->filter(fn($u) => in_array($u->level, $allowedLevels));
+                                $targetUsers = $usersEselon->filter(function($u) use ($allowedLevels) {
+                                    if (strtolower(trim($u->name)) == 'admin dikdasmen') {
+                                        return in_array(7, $allowedLevels);
+                                    }
+                                    return in_array($u->level, $allowedLevels);
+                                });
                             @endphp
                             @foreach($targetUsers as $userTarget)
                                 <option value="{{ $userTarget->id_user }}">{{ $userTarget->name }}</option>
@@ -377,6 +392,59 @@
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                     <button type="submit" class="btn btn-primary">Lanjutkan</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal Selesai -->
+          <div class="modal fade" id="modalSelesai{{ $item->id_pengajuan }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form action="{{ route('pengajuan.selesai', $item->id_pengajuan) }}" method="POST">
+                  @csrf
+                  <div class="modal-header bg-success">
+                    <h5 class="modal-title text-white"><i class="ti ti-send me-2"></i> Kembalikan ke Pengirim</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="alert alert-success bg-success-subtle text-success border-0 mb-3">
+                      <div class="d-flex align-items-center">
+                        <i class="ti ti-check fs-4 me-2"></i>
+                        <span>Dokumen ini telah di-ACC.</span>
+                      </div>
+                    </div>
+                    
+                    <div class="border rounded p-3 mb-3 bg-light">
+                      <div class="row">
+                        <div class="col-12 mb-2">
+                          <small class="text-muted d-block fw-bold">Nomor Surat</small>
+                          <span>{{ $item->nomor_surat ?? '-' }}</span>
+                        </div>
+                        <div class="col-12 mb-2">
+                          <small class="text-muted d-block fw-bold">Pengirim</small>
+                          <span>{{ $item->lembaga ? $item->lembaga->nama_lembaga : '-' }}</span>
+                        </div>
+                        <div class="col-12 mb-2">
+                          <small class="text-muted d-block fw-bold">Jenis Surat</small>
+                          <span>{{ $item->jenis_surat }}</span>
+                        </div>
+                        <div class="col-12">
+                          <small class="text-muted d-block fw-bold">Perihal</small>
+                          <span>{{ $item->perihal }}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label fw-semibold">Catatan (Opsional)</label>
+                      <textarea class="form-control" name="catatan" rows="3" placeholder="Tambahkan pesan atau instruksi tambahan jika ada..."></textarea>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success"><i class="ti ti-send me-1"></i> Selesaikan & Kembalikan</button>
                   </div>
                 </form>
               </div>

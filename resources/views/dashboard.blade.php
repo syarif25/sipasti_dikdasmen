@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'SIPASTI Dikdasmen - Dashboard')
+@section('title', ' Dikdasmen - Dashboard')
 
 @section('content')
 <div class="row">
@@ -13,7 +13,7 @@
               <div class="rounded-circle overflow-hidden me-6">
                 <img src="{{ asset('assets/images/profile/user-1.jpg') }}" alt="" width="40" height="40">
               </div>
-              <h5 class="fw-semibold mb-0 fs-5">Welcome back to SIPASTI Dikdasmen!</h5>
+              <h5 class="fw-semibold mb-0 fs-5">Welcome back to Dikdasmen!</h5>
             </div>
             <div class="d-flex align-items-center">
               <div class="border-end pe-4 border-muted border-opacity-10">

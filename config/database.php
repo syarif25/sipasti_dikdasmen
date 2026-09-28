@@ -64,6 +64,23 @@ return [
             ]) : [],
         ],
 
+
+        // Koneksi ke database Sipasti (untuk cross-DB lookup user/lembaga)
+        'sipasti' => [
+            'driver'         => 'mysql',
+            'host'           => env('SIPASTI_DB_HOST', env('DB_HOST', '127.0.0.1')),
+            'port'           => env('SIPASTI_DB_PORT', env('DB_PORT', '3306')),
+            'database'       => env('SIPASTI_DB_DATABASE', 'sipasti'),
+            'username'       => env('SIPASTI_DB_USERNAME', env('DB_USERNAME', 'root')),
+            'password'       => env('SIPASTI_DB_PASSWORD', env('DB_PASSWORD', '')),
+            'unix_socket'    => env('DB_SOCKET', ''),
+            'charset'        => 'utf8mb4',
+            'collation'      => 'utf8mb4_unicode_ci',
+            'prefix'         => '',
+            'prefix_indexes' => true,
+            'strict'         => false,
+        ],
+
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),

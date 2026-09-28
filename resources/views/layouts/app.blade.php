@@ -22,7 +22,7 @@
 
   @stack('styles')
 
-  <title>SIPASTI Dikdasmen</title>
+  <title>Dikdasmen</title>
 
   <!-- Prevent FOUC for Dark Mode -->
   <script>
@@ -112,8 +112,8 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       // 1. Force the correct display on load
-      const savedTheme = localStorage.getItem('sipasti_theme') || 'light';
-      if (savedTheme === 'dark') {
+      const savedThemeVal = localStorage.getItem('sipasti_theme') || 'light';
+      if (savedThemeVal === 'dark') {
         document.querySelectorAll('.dark-logo').forEach(el => el.style.display = 'none');
         document.querySelectorAll('.light-logo').forEach(el => el.style.display = 'flex');
         document.querySelectorAll('.moon').forEach(el => el.style.display = 'none');
@@ -148,5 +148,14 @@
       });
     });
   </script>
+  @if($errors->any())
+  <script>
+    Swal.fire({
+      icon: 'error',
+      title: 'Validasi Gagal!',
+      html: '{!! implode("<br>", $errors->all()) !!}',
+    });
+  </script>
+  @endif
 </body>
 </html>

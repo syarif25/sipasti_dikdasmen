@@ -13,7 +13,7 @@
   <!-- Core Css -->
   <link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}" />
 
-  <title>@yield('title', 'SIPASTI Dikdasmen - Login')</title>
+  <title>@yield('title', 'Dikdasmen - Login')</title>
 </head>
 
 <body>

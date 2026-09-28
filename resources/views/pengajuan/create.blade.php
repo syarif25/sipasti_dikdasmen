@@ -47,9 +47,9 @@
         </div>
 
         <div class="col-md-6 mb-3">
-          <label class="form-label">Tujuan Akhir Surat <span class="text-danger">*</span></label>
+          <label class="form-label">Tujuan  <span class="text-danger">*</span></label>
           <select class="form-select" name="tujuan" required>
-            <option value="">-- Pilih Tujuan Akhir --</option>
+            <option value="">-- Pilih Tujuan  --</option>
             <option value="Pengasuh">Pengasuh</option>
             <option value="Ketua Yayasan">Ketua Yayasan</option>
             <option value="BPK2M">BPK2M</option>
